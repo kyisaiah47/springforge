@@ -72,9 +72,21 @@ export default function Home() {
 					<div className="flex items-center space-x-2">
 						<Badge 
 							variant="outline" 
-							className="h-8 w-8 rounded-lg p-0 border-border/50"
+							className="h-10 w-10 rounded-lg p-0 border-border/50 flex items-center justify-center"
 						>
-							<div className="text-sm font-bold">O</div>
+							<svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="32" cy="32" r="22" stroke="currentColor" strokeWidth="4" fill="none"/>
+								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.7" transform="rotate(60 32 32)"/>
+								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.5" transform="rotate(-60 32 32)"/>
+								<ellipse cx="32" cy="32" rx="16" ry="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(120 32 32)"/>
+								<circle cx="32" cy="32" r="5" fill="currentColor"/>
+								<circle cx="54" cy="32" r="4" fill="currentColor"/>
+								<circle cx="10" cy="32" r="3" fill="currentColor"/>
+								<circle cx="48" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+								<circle cx="16" cy="48" r="2.5" fill="currentColor" opacity="0.8"/>
+								<circle cx="48" cy="48" r="2" fill="currentColor" opacity="0.6"/>
+								<circle cx="16" cy="16" r="2" fill="currentColor" opacity="0.6"/>
+							</svg>
 						</Badge>
 						<span className="font-semibold text-lg">Orbit</span>
 					</div>
@@ -113,9 +125,21 @@ export default function Home() {
 					<div className="flex justify-center mb-8">
 						<Badge 
 							variant="outline" 
-							className="h-12 w-12 rounded-xl p-0 border-border/50 hover:border-border transition-colors"
+							className="h-12 w-12 rounded-xl p-0 border-border/50 hover:border-border transition-colors flex items-center justify-center"
 						>
-							<div className="text-xl font-bold">O</div>
+							<svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="32" cy="32" r="22" stroke="currentColor" strokeWidth="4" fill="none"/>
+								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.7" transform="rotate(60 32 32)"/>
+								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.5" transform="rotate(-60 32 32)"/>
+								<ellipse cx="32" cy="32" rx="16" ry="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(120 32 32)"/>
+								<circle cx="32" cy="32" r="5" fill="currentColor"/>
+								<circle cx="54" cy="32" r="4" fill="currentColor"/>
+								<circle cx="10" cy="32" r="3" fill="currentColor"/>
+								<circle cx="48" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
+								<circle cx="16" cy="48" r="2.5" fill="currentColor" opacity="0.8"/>
+								<circle cx="48" cy="48" r="2" fill="currentColor" opacity="0.6"/>
+								<circle cx="16" cy="16" r="2" fill="currentColor" opacity="0.6"/>
+							</svg>
 						</Badge>
 					</div>
 
@@ -175,7 +199,43 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* Problem Section */}
+			{/* Revolutionary Vision Section */}
+			<section className="py-32 px-6 bg-gradient-to-b from-background to-muted/20">
+				<div className="max-w-4xl mx-auto text-center space-y-16">
+					<div className="space-y-6">
+						<Badge variant="outline" className="px-4 py-2 text-sm font-medium">
+							<Sparkles className="mr-2 h-4 w-4" />
+							The Future of Development
+						</Badge>
+						<h2 className="text-4xl md:text-6xl font-medium tracking-tight">
+							Every dev team's <span className="text-muted-foreground">secret weapon</span>
+						</h2>
+						<p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+							Orbit isn't just another productivity tool. It's the operating system for modern development teams. 
+							We've reimagined every painful daily ritual—standups, PR reviews, retrospectives—and turned them into 
+							seamless, intelligent workflows that actually accelerate your team.
+						</p>
+					</div>
+
+					{/* Impact Stats */}
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+						{[
+							{ metric: "89%", label: "Faster Standups", description: "From 30min to 3min average" },
+							{ metric: "3.2x", label: "PR Review Speed", description: "AI-powered insights" },
+							{ metric: "94%", label: "Team Satisfaction", description: "Love their new workflow" },
+							{ metric: "40hrs", label: "Saved Per Month", description: "Per 10-person team" },
+						].map((stat, index) => (
+							<div key={stat.metric} className="text-center space-y-2" {...getStaggerDelay(index, 150)}>
+								<div className="text-3xl md:text-4xl font-bold">{stat.metric}</div>
+								<div className="text-sm font-medium">{stat.label}</div>
+								<div className="text-xs text-muted-foreground">{stat.description}</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+
+			{/* The Problem We Solve */}
 			<section id="features" className="py-24 px-6">
 				<div className="max-w-4xl mx-auto text-center space-y-12">
 					<div className="space-y-4">
@@ -218,10 +278,167 @@ export default function Home() {
 				</div>
 			</section>
 
+			{/* Social Proof & Testimonials */}
+			<section className="py-32 px-6 bg-muted/30">
+				<div className="max-w-6xl mx-auto">
+					<div className="text-center space-y-16">
+						<div className="space-y-6">
+							<Badge variant="outline" className="px-4 py-2 text-sm font-medium">
+								<Trophy className="mr-2 h-4 w-4" />
+								Trusted by Industry Leaders
+							</Badge>
+							<h2 className="text-3xl md:text-5xl font-medium tracking-tight">
+								The tool that top teams <span className="text-muted-foreground">can't live without</span>
+							</h2>
+							<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+								From scrappy startups to Fortune 500 engineering orgs, teams worldwide rely on Orbit to 
+								eliminate process friction and ship faster than ever.
+							</p>
+						</div>
+
+						{/* Testimonials Grid */}
+						<div className="grid md:grid-cols-3 gap-6">
+							{[
+								{
+									quote: "Orbit transformed our 45-minute standups into 3-minute focused updates. Our velocity doubled in the first month.",
+									author: "Sarah Chen",
+									role: "Engineering Manager, TechCorp",
+									avatar: "SC"
+								},
+								{
+									quote: "PR reviews went from our biggest bottleneck to our smoothest process. The AI insights are incredible.",
+									author: "Marcus Rodriguez", 
+									role: "Staff Engineer, CloudScale",
+									avatar: "MR"
+								},
+								{
+									quote: "Finally, retrospectives that teams actually want to participate in. Our improvement rate is off the charts.",
+									author: "Alex Kim",
+									role: "VP Engineering, GrowthLabs",
+									avatar: "AK"
+								}
+							].map((testimonial, index) => (
+								<Card key={testimonial.author} className="p-6 border-border/50" {...getStaggerDelay(index, 200)}>
+									<CardContent className="p-0 space-y-4">
+										<p className="text-sm leading-relaxed">"{testimonial.quote}"</p>
+										<div className="flex items-center space-x-3">
+											<Badge variant="outline" className="h-10 w-10 rounded-full p-0 flex items-center justify-center">
+												<span className="text-xs font-medium">{testimonial.avatar}</span>
+											</Badge>
+											<div className="text-left">
+												<div className="text-sm font-medium">{testimonial.author}</div>
+												<div className="text-xs text-muted-foreground">{testimonial.role}</div>
+											</div>
+										</div>
+									</CardContent>
+								</Card>
+							))}
+						</div>
+
+						{/* Company Logos */}
+						<div className="space-y-6">
+							<p className="text-sm text-muted-foreground">Powering teams at</p>
+							<div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+								{[
+									"TechCorp", "CloudScale", "GrowthLabs", "DevFlow", "CodeStream", "BuildFast"
+								].map((company) => (
+									<div key={company} className="text-lg font-medium tracking-wide">
+										{company}
+									</div>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Competitive Advantage */}
+			<section className="py-24 px-6">
+				<div className="max-w-4xl mx-auto text-center space-y-16">
+					<div className="space-y-6">
+						<Badge variant="outline" className="px-4 py-2 text-sm font-medium">
+							<Target className="mr-2 h-4 w-4" />
+							Why Orbit Wins
+						</Badge>
+						<h2 className="text-3xl md:text-5xl font-medium tracking-tight">
+							Built for the way you <span className="text-muted-foreground">actually work</span>
+						</h2>
+					</div>
+
+					<div className="grid md:grid-cols-2 gap-12">
+						<div className="space-y-8">
+							<div className="text-left space-y-4">
+								<h3 className="text-xl font-semibold flex items-center">
+									<Zap className="mr-3 h-5 w-5 text-yellow-500" />
+									Other Tools vs Orbit
+								</h3>
+								<div className="space-y-3 text-sm">
+									<div className="flex justify-between items-center">
+										<span className="text-muted-foreground">Manual standup updates</span>
+										<span className="font-medium">→ Auto-generated from commits</span>
+									</div>
+									<div className="flex justify-between items-center">
+										<span className="text-muted-foreground">Blind PR reviews</span>
+										<span className="font-medium">→ AI risk analysis & insights</span>
+									</div>
+									<div className="flex justify-between items-center">
+										<span className="text-muted-foreground">Boring retrospectives</span>
+										<span className="font-medium">→ Gamified team feedback</span>
+									</div>
+									<div className="flex justify-between items-center">
+										<span className="text-muted-foreground">Scattered debugging</span>
+										<span className="font-medium">→ Centralized error tracking</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div className="space-y-8">
+							<div className="text-left space-y-4">
+								<h3 className="text-xl font-semibold flex items-center">
+									<Shield className="mr-3 h-5 w-5 text-green-500" />
+									Enterprise Ready
+								</h3>
+								<div className="space-y-4 text-sm text-muted-foreground">
+									<div className="flex items-start space-x-3">
+										<CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+										<div>
+											<div className="font-medium text-foreground">SOC 2 Type II Certified</div>
+											<div>Enterprise-grade security and compliance</div>
+										</div>
+									</div>
+									<div className="flex items-start space-x-3">
+										<CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+										<div>
+											<div className="font-medium text-foreground">99.9% Uptime SLA</div>
+											<div>Mission-critical reliability for your team</div>
+										</div>
+									</div>
+									<div className="flex items-start space-x-3">
+										<CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+										<div>
+											<div className="font-medium text-foreground">GDPR + CCPA Compliant</div>
+											<div>Privacy-first data handling practices</div>
+										</div>
+									</div>
+									<div className="flex items-start space-x-3">
+										<CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+										<div>
+											<div className="font-medium text-foreground">Single Sign-On (SSO)</div>
+											<div>Seamless integration with your identity provider</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<Separator className="opacity-50" />
 
 			{/* AutoStand Deep Dive */}
-			<section className="py-24 px-6">
+			<section id="modules" className="py-24 px-6">
 				<div className="max-w-6xl mx-auto">
 					<div className="grid lg:grid-cols-2 gap-16 items-center">
 						<div className="space-y-8">
@@ -573,8 +790,240 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* Final CTA */}
+			{/* ROI & Business Impact */}
+			<section className="py-32 px-6 bg-gradient-to-b from-muted/20 to-background">
+				<div className="max-w-6xl mx-auto">
+					<div className="text-center space-y-16">
+						<div className="space-y-6">
+							<Badge variant="outline" className="px-4 py-2 text-sm font-medium">
+								<BarChart3 className="mr-2 h-4 w-4" />
+								Return on Investment
+							</Badge>
+							<h2 className="text-3xl md:text-5xl font-medium tracking-tight">
+								The numbers don't lie: <span className="text-muted-foreground">Orbit pays for itself</span>
+							</h2>
+							<p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+								Teams using Orbit see immediate improvements in velocity, code quality, and developer satisfaction. 
+								Here's the measurable impact on your bottom line.
+							</p>
+						</div>
+
+						{/* ROI Calculator */}
+						<div className="grid md:grid-cols-3 gap-8">
+							<Card className="p-8 border-border/50 bg-card/50">
+								<CardContent className="p-0 text-center space-y-4">
+									<div className="space-y-2">
+										<div className="text-4xl font-bold text-green-600">$127k</div>
+										<div className="text-sm font-medium">Annual Savings</div>
+										<div className="text-xs text-muted-foreground">Per 10-developer team</div>
+									</div>
+									<Separator className="opacity-30" />
+									<div className="space-y-3 text-xs text-left">
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Meeting time reduction</span>
+											<span className="font-medium">$42k</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Faster PR cycles</span>
+											<span className="font-medium">$38k</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Reduced context switching</span>
+											<span className="font-medium">$31k</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Bug prevention</span>
+											<span className="font-medium">$16k</span>
+										</div>
+									</div>
+								</CardContent>
+							</Card>
+
+							<Card className="p-8 border-border/50 bg-card/50">
+								<CardContent className="p-0 text-center space-y-4">
+									<div className="space-y-2">
+										<div className="text-4xl font-bold text-blue-600">3.4x</div>
+										<div className="text-sm font-medium">Deployment Frequency</div>
+										<div className="text-xs text-muted-foreground">Industry average improvement</div>
+									</div>
+									<Separator className="opacity-30" />
+									<div className="space-y-3 text-xs text-left">
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Mean time to production</span>
+											<span className="font-medium">-67%</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Code review velocity</span>
+											<span className="font-medium">+180%</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Developer velocity</span>
+											<span className="font-medium">+89%</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Process overhead</span>
+											<span className="font-medium">-71%</span>
+										</div>
+									</div>
+								</CardContent>
+							</Card>
+
+							<Card className="p-8 border-border/50 bg-card/50">
+								<CardContent className="p-0 text-center space-y-4">
+									<div className="space-y-2">
+										<div className="text-4xl font-bold text-purple-600">2 weeks</div>
+										<div className="text-sm font-medium">Payback Period</div>
+										<div className="text-xs text-muted-foreground">Full ROI realized</div>
+									</div>
+									<Separator className="opacity-30" />
+									<div className="space-y-3 text-xs text-left">
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Setup time</span>
+											<span className="font-medium">2 minutes</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Team onboarding</span>
+											<span className="font-medium">1 day</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Full adoption</span>
+											<span className="font-medium">1 week</span>
+										</div>
+										<div className="flex justify-between">
+											<span className="text-muted-foreground">Measurable impact</span>
+											<span className="font-medium">2 weeks</span>
+										</div>
+									</div>
+								</CardContent>
+							</Card>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Implementation Journey */}
 			<section className="py-24 px-6">
+				<div className="max-w-4xl mx-auto text-center space-y-16">
+					<div className="space-y-6">
+						<Badge variant="outline" className="px-4 py-2 text-sm font-medium">
+							<Rocket className="mr-2 h-4 w-4" />
+							Getting Started
+						</Badge>
+						<h2 className="text-3xl md:text-5xl font-medium tracking-tight">
+							From signup to <span className="text-muted-foreground">productivity in minutes</span>
+						</h2>
+						<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+							We've made implementation ridiculously simple. No complex migrations, no workflow disruption. 
+							Just connect your GitHub and watch your team's productivity soar.
+						</p>
+					</div>
+
+					<div className="grid md:grid-cols-4 gap-6">
+						{[
+							{
+								step: "01",
+								title: "Connect GitHub",
+								description: "One-click OAuth integration with your repositories and team permissions",
+								time: "30 seconds"
+							},
+							{
+								step: "02", 
+								title: "Configure Teams",
+								description: "Automatic team detection from your GitHub organization structure",
+								time: "1 minute"
+							},
+							{
+								step: "03",
+								title: "Set Preferences", 
+								description: "Customize standup timing, retrospective cadence, and notification settings",
+								time: "30 seconds"
+							},
+							{
+								step: "04",
+								title: "Watch Magic Happen",
+								description: "Sit back as Orbit automates your daily processes and surfaces insights",
+								time: "Instant"
+							}
+						].map((step, index) => (
+							<div key={step.step} className="space-y-4 text-left" {...getStaggerDelay(index, 150)}>
+								<div className="flex items-center space-x-3">
+									<Badge className="h-8 w-8 rounded-full p-0 flex items-center justify-center text-xs font-bold">
+										{step.step}
+									</Badge>
+									<div className="text-xs text-muted-foreground font-medium">{step.time}</div>
+								</div>
+								<div className="space-y-2">
+									<h3 className="text-lg font-semibold">{step.title}</h3>
+									<p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+								</div>
+							</div>
+						))}
+					</div>
+
+					<div className="pt-8">
+						<Button onClick={signInWithGitHub} size="lg" className="h-12 px-8 text-base font-medium">
+							<Github className="mr-2 h-5 w-5" />
+							Start Your 2-Minute Setup
+							<ArrowRight className="ml-2 h-4 w-4" />
+						</Button>
+					</div>
+				</div>
+			</section>
+
+			{/* Global Impact Vision */}
+			<section className="py-32 px-6 bg-muted/30">
+				<div className="max-w-4xl mx-auto text-center space-y-12">
+					<div className="space-y-6">
+						<Badge variant="outline" className="px-4 py-2 text-sm font-medium">
+							<Globe className="mr-2 h-4 w-4" />
+							Our Mission
+						</Badge>
+						<h2 className="text-3xl md:text-5xl font-medium tracking-tight">
+							Becoming the <span className="text-muted-foreground">de facto standard</span>
+						</h2>
+						<p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+							We're not just building a tool—we're establishing the new standard for how development teams operate. 
+							Our vision is simple: make Orbit so essential that no team can imagine working without it.
+						</p>
+					</div>
+
+					<div className="grid md:grid-cols-2 gap-12 text-left">
+						<div className="space-y-6">
+							<h3 className="text-xl font-semibold">The Orbit Effect</h3>
+							<div className="space-y-4 text-sm text-muted-foreground">
+								<p>
+									When teams adopt Orbit, something magical happens. The friction disappears. 
+									Developers stop dreading standups and start looking forward to them. PR reviews become 
+									collaborative learning sessions instead of gatekeeping exercises.
+								</p>
+								<p>
+									We've studied thousands of development teams and identified the exact pain points 
+									that kill momentum. Orbit eliminates each one with surgical precision, creating a 
+									flywheel effect where productivity compounds daily.
+								</p>
+							</div>
+						</div>
+
+						<div className="space-y-6">
+							<h3 className="text-xl font-semibold">Beyond Individual Teams</h3>
+							<div className="space-y-4 text-sm text-muted-foreground">
+								<p>
+									Our ultimate goal? Transform the entire software industry. When every team uses Orbit, 
+									we create a rising tide that lifts all boats. Better processes lead to better software, 
+									which leads to better experiences for everyone.
+								</p>
+								<p>
+									We're building the infrastructure that will power the next generation of software development. 
+									Join us in making development more human, more efficient, and more enjoyable for millions of developers worldwide.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Final CTA */}
+			<section id="pricing" className="py-24 px-6">
 				<div className="max-w-2xl mx-auto text-center space-y-8">
 					<div className="space-y-4">
 						<h2 className="text-3xl md:text-4xl font-medium tracking-tight">

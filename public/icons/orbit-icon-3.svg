@@ -1,0 +1,9 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Geometric "O" with orbital elements -->
+  <circle cx="32" cy="32" r="20" stroke="currentColor" stroke-width="3" fill="none"/>
+  <path d="M12 32 Q32 12 52 32 Q32 52 12 32" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="12" cy="32" r="2" fill="currentColor"/>
+  <circle cx="52" cy="32" r="2" fill="currentColor"/>
+  <circle cx="32" cy="12" r="1.5" fill="currentColor" opacity="0.7"/>
+  <circle cx="32" cy="52" r="1.5" fill="currentColor" opacity="0.7"/>
+</svg>
