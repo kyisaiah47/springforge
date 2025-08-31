@@ -1,59 +1,106 @@
 import { describe, it, expect } from "vitest";
-import { z } from "zod";
 import {
 	validateRequestBody,
 	validateQueryParams,
-	paginationSchema,
+	webhookSchemas,
+	standupSchemas,
+	prSchemas,
 } from "../validation";
 
 describe("Validation Utilities", () => {
-	it("should validate request body successfully", () => {
-		const schema = z.object({
-			name: z.string(),
-			age: z.number(),
+	describe("validateRequestBody", () => {
+		it("should validate correct GitHub webhook payload", () => {
+			const validPayload = {
+				action: "opened",
+				repository: {
+					name: "test-repo",
+					full_name: "owner/test-repo",
+					owner: { login: "owner" },
+				},
+				pull_request: {
+					number: 1,
+					title: "Test PR",
+					body: "Test description",
+					state: "open",
+					merged: false,
+					additions: 10,
+					deletions: 5,
+					changed_files: 2,
+					head: { ref: "feature", sha: "abc123" },
+					base: { ref: "main", sha: "def456" },
+					user: { login: "testuser", id: 123 },
+				},
+			};
+
+			const result = validateRequestBody(webhookSchemas.github, validPayload);
+			expect(result.action).toBe("opened");
+			expect(result.pull_request?.number).toBe(1);
 		});
 
-		const validData = { name: "John", age: 30 };
-		const result = validateRequestBody(schema, validData);
+		it("should reject invalid GitHub webhook payload", () => {
+			const invalidPayload = {
+				action: "opened",
+				// Missing required repository field
+			};
 
-		expect(result).toEqual(validData);
-	});
-
-	it("should throw error for invalid request body", () => {
-		const schema = z.object({
-			name: z.string(),
-			age: z.number(),
+			expect(() => {
+				validateRequestBody(webhookSchemas.github, invalidPayload);
+			}).toThrow("Validation failed");
 		});
 
-		const invalidData = { name: "John", age: "thirty" };
+		it("should validate standup generation request", () => {
+			const validRequest = {
+				member_id: "123e4567-e89b-12d3-a456-426614174000",
+				date: "2024-01-01",
+			};
 
-		expect(() => validateRequestBody(schema, invalidData)).toThrow(
-			"Validation failed"
-		);
+			const result = validateRequestBody(standupSchemas.generate, validRequest);
+			expect(result.member_id).toBe("123e4567-e89b-12d3-a456-426614174000");
+			expect(result.date).toBe("2024-01-01");
+		});
 	});
 
-	it("should validate query parameters with defaults", () => {
-		const queryParams = { limit: "10", order_dir: "asc" };
-		const result = validateQueryParams(paginationSchema, queryParams);
+	describe("validateQueryParams", () => {
+		it("should validate PR list query parameters", () => {
+			const queryParams = {
+				status: "open",
+				limit: "10",
+				risk_min: "5",
+			};
 
-		expect(result.limit).toBe(10);
-		expect(result.order_dir).toBe("asc");
-		expect(result.order_by).toBeUndefined();
-	});
+			const result = validateQueryParams(prSchemas.list, queryParams);
+			expect(result.status).toBe("open");
+			expect(result.limit).toBe(10);
+			expect(result.risk_min).toBe(5);
+		});
 
-	it("should apply default values for missing query parameters", () => {
-		const queryParams = {};
-		const result = validateQueryParams(paginationSchema, queryParams);
+		it("should use default values for optional parameters", () => {
+			const queryParams = {};
 
-		expect(result.limit).toBe(20); // default value
-		expect(result.order_dir).toBe("desc"); // default value
-	});
+			const result = validateQueryParams(prSchemas.list, queryParams);
+			expect(result.limit).toBe(20); // Default value
+			expect(result.order_dir).toBe("desc"); // Default value
+		});
 
-	it("should handle array query parameters", () => {
-		const queryParams = { limit: ["15", "20"], order_dir: ["asc"] };
-		const result = validateQueryParams(paginationSchema, queryParams);
+		it("should handle array query parameters", () => {
+			const queryParams = {
+				status: ["open", "closed"], // Array - should take first value
+				limit: "15",
+			};
 
-		expect(result.limit).toBe(15); // takes first value
-		expect(result.order_dir).toBe("asc");
+			const result = validateQueryParams(prSchemas.list, queryParams);
+			expect(result.status).toBe("open");
+			expect(result.limit).toBe(15);
+		});
+
+		it("should reject invalid query parameters", () => {
+			const queryParams = {
+				limit: "invalid-number",
+			};
+
+			expect(() => {
+				validateQueryParams(prSchemas.list, queryParams);
+			}).toThrow("Query parameter validation failed");
+		});
 	});
 });
