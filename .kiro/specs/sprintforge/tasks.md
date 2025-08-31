@@ -83,7 +83,7 @@ d# Implementation Plan
   - Write basic unit tests for scoring functions (inline testing)
   - _Requirements: 3.1, 3.2, 3.5_
 
-- [-] 11. PR Radar Module - GitHub Webhook Handler 🔴
+- [x] 11. PR Radar Module - GitHub Webhook Handler 🔴
 
   - Implement GitHub webhook endpoint for PR events
   - Create webhook signature verification and payload processing
@@ -91,7 +91,7 @@ d# Implementation Plan
   - Write integration tests for webhook processing and data storage
   - _Requirements: 3.1, 3.6_
 
-- [ ] 12. PR Radar Module - UI Components 🔴
+- [-] 12. PR Radar Module - UI Components 🔴
 
   - Create PRScoreCard component with risk visualization
   - Build ReviewerSuggestions component with reasoning display

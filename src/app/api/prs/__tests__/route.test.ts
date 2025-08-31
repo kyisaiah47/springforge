@@ -198,7 +198,10 @@ describe("PR API Routes", () => {
 											error: null,
 										}),
 									};
-								} else if (field === "id" && value === "other-member-id") {
+								} else if (
+									field === "id" &&
+									value === "550e8400-e29b-41d4-a716-446655440000"
+								) {
 									return {
 										single: vi.fn().mockResolvedValue({
 											data: { org_id: "different-org-id" },
@@ -215,7 +218,7 @@ describe("PR API Routes", () => {
 			});
 
 			const request = new NextRequest(
-				"http://localhost:3000/api/prs?author_member_id=other-member-id"
+				"http://localhost:3000/api/prs?author_member_id=550e8400-e29b-41d4-a716-446655440000"
 			);
 			const response = await GET(request);
 			const responseData = await response.json();
