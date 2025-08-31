@@ -151,7 +151,7 @@ export function formatStandupMessage(data: StandupData): SlackMessage {
 
 	return {
 		blocks,
-		username: "SprintForge",
+		username: "Orbit",
 		icon_emoji: ":rocket:",
 	};
 }
@@ -258,7 +258,7 @@ export function formatTeamStandupSummary(data: TeamStandupData): SlackMessage {
 
 	return {
 		blocks,
-		username: "SprintForge",
+		username: "Orbit",
 		icon_emoji: ":rocket:",
 	};
 }
@@ -299,7 +299,7 @@ export function formatPRAlertMessage(data: PRAlertData): SlackMessage {
 				short: true,
 			},
 		],
-		footer: "SprintForge PR Radar",
+		footer: "Orbit PR Radar",
 		footer_icon: "https://github.com/favicon.ico",
 		ts: Math.floor(Date.now() / 1000),
 	};
@@ -344,7 +344,7 @@ export function formatPRAlertMessage(data: PRAlertData): SlackMessage {
 		text: `${alertType}: ${data.repo}#${data.number}`,
 		blocks,
 		attachments: [attachment],
-		username: "SprintForge PR Radar",
+		username: "Orbit PR Radar",
 		icon_emoji: ":radar:",
 	};
 }
@@ -362,7 +362,7 @@ export function formatSimpleMessage(
 ): SlackMessage {
 	const message: SlackMessage = {
 		text,
-		username: options?.username || "SprintForge",
+		username: options?.username || "Orbit",
 		icon_emoji: options?.emoji || ":rocket:",
 	};
 
@@ -386,7 +386,7 @@ export function formatErrorMessage(
 	context?: string
 ): SlackMessage {
 	return {
-		text: `❌ SprintForge Error${context ? ` (${context})` : ""}: ${error}`,
+		text: `❌ Orbit Error${context ? ` (${context})` : ""}: ${error}`,
 		attachments: [
 			{
 				color: "#ff0000",
@@ -411,10 +411,10 @@ export function formatErrorMessage(
 						short: true,
 					},
 				],
-				footer: "SprintForge Error Handler",
+				footer: "Orbit Error Handler",
 			},
 		],
-		username: "SprintForge",
+		username: "Orbit",
 		icon_emoji: ":warning:",
 	};
 }

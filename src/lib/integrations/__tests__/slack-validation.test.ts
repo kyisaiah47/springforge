@@ -359,7 +359,7 @@ describe("Slack Validation", () => {
 			expect(stepsText).toContain("Slack workspace");
 			expect(stepsText).toContain("Incoming Webhooks");
 			expect(stepsText).toContain("webhook URL");
-			expect(stepsText).toContain("SprintForge");
+			expect(stepsText).toContain("Orbit");
 		});
 	});
 });

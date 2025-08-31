@@ -35,7 +35,7 @@ describe("Slack Message Formatting", () => {
 
 			expect(message.blocks).toBeDefined();
 			expect(message.blocks!.length).toBeGreaterThan(0);
-			expect(message.username).toBe("SprintForge");
+			expect(message.username).toBe("Orbit");
 			expect(message.icon_emoji).toBe(":rocket:");
 
 			// Check header block
@@ -151,7 +151,7 @@ describe("Slack Message Formatting", () => {
 			const message = formatTeamStandupSummary(teamData);
 
 			expect(message.blocks).toBeDefined();
-			expect(message.username).toBe("SprintForge");
+			expect(message.username).toBe("Orbit");
 
 			const messageText = JSON.stringify(message.blocks);
 			expect(messageText).toContain("Engineering Team");
@@ -205,7 +205,7 @@ describe("Slack Message Formatting", () => {
 
 			expect(message.blocks).toBeDefined();
 			expect(message.attachments).toBeDefined();
-			expect(message.username).toBe("SprintForge PR Radar");
+			expect(message.username).toBe("Orbit PR Radar");
 			expect(message.icon_emoji).toBe(":radar:");
 
 			const messageText = JSON.stringify(message);
@@ -271,7 +271,7 @@ describe("Slack Message Formatting", () => {
 			const message = formatSimpleMessage("Hello, world!");
 
 			expect(message.text).toBe("Hello, world!");
-			expect(message.username).toBe("SprintForge");
+			expect(message.username).toBe("Orbit");
 			expect(message.icon_emoji).toBe(":rocket:");
 		});
 
@@ -294,9 +294,9 @@ describe("Slack Message Formatting", () => {
 		it("should format error message without context", () => {
 			const message = formatErrorMessage("Something went wrong");
 
-			expect(message.text).toContain("SprintForge Error");
+			expect(message.text).toContain("Orbit Error");
 			expect(message.text).toContain("Something went wrong");
-			expect(message.username).toBe("SprintForge");
+			expect(message.username).toBe("Orbit");
 			expect(message.icon_emoji).toBe(":warning:");
 			expect(message.attachments).toBeDefined();
 			expect(message.attachments![0].color).toBe("#ff0000");
@@ -308,7 +308,7 @@ describe("Slack Message Formatting", () => {
 				"GitHub integration"
 			);
 
-			expect(message.text).toContain("SprintForge Error (GitHub integration)");
+			expect(message.text).toContain("Orbit Error (GitHub integration)");
 			expect(message.text).toContain("API call failed");
 
 			const attachment = message.attachments![0];

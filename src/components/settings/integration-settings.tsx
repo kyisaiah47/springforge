@@ -356,7 +356,7 @@ export function IntegrationSettings() {
 						<div>
 							<CardTitle>Integrations</CardTitle>
 							<CardDescription>
-								Connect SprintForge with your development tools
+								Connect Orbit with your development tools
 							</CardDescription>
 						</div>
 					</div>
@@ -592,7 +592,7 @@ export function IntegrationSettings() {
 							<Settings className="mx-auto h-12 w-12 text-muted-foreground" />
 							<h3 className="mt-2 text-sm font-semibold">No integrations</h3>
 							<p className="mt-1 text-sm text-muted-foreground">
-								Connect GitHub and Slack to get started with SprintForge.
+								Connect GitHub and Slack to get started with Orbit.
 							</p>
 						</div>
 					)}

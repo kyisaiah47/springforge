@@ -2,7 +2,7 @@
 
 ## Overview
 
-SprintForge is architected as a modern Next.js 14+ web application using the App Router pattern, with Supabase as the backend-as-a-service provider. The system follows a modular monolith approach where each of the four modules (AutoStand, PR Radar, Retro Arena, Debug Arcade) operates as a distinct feature domain while sharing common infrastructure and data models.
+Orbit is architected as a modern Next.js 14+ web application using the App Router pattern, with Supabase as the backend-as-a-service provider. The system follows a modular monolith approach where each of the four modules (AutoStand, PR Radar, Retro Arena, Debug Arcade) operates as a distinct feature domain while sharing common infrastructure and data models.
 
 The application emphasizes real-time collaboration, automated workflows, and seamless integrations with developer tools. Built with TypeScript for type safety, Tailwind CSS for styling, and shadcn/ui for consistent component design, the platform provides a cohesive user experience across all modules.
 

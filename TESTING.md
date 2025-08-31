@@ -1,6 +1,6 @@
 # Testing Guide
 
-SprintForge uses a comprehensive testing strategy with both unit tests and end-to-end tests.
+Orbit uses a comprehensive testing strategy with both unit tests and end-to-end tests.
 
 ## Test Structure
 
@@ -91,7 +91,7 @@ import { test, expect } from "@playwright/test";
 test("should load the homepage", async ({ page }) => {
 	await page.goto("/");
 
-	await expect(page).toHaveTitle(/SprintForge/);
+	await expect(page).toHaveTitle(/Orbit/);
 	await expect(page.locator("body")).toBeVisible();
 });
 ```

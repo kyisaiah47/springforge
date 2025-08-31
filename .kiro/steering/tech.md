@@ -1,6 +1,6 @@
 # Technology Stack
 
-SprintForge is built with modern web technologies optimized for developer productivity and scalability.
+Orbit is built with modern web technologies optimized for developer productivity and scalability.
 
 ## Core Framework & Runtime
 

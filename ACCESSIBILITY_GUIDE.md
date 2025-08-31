@@ -1,10 +1,10 @@
-# SprintForge Accessibility Guide
+# Orbit Accessibility Guide
 
-This document outlines the accessibility features implemented in SprintForge and provides guidelines for maintaining and improving accessibility standards.
+This document outlines the accessibility features implemented in Orbit and provides guidelines for maintaining and improving accessibility standards.
 
 ## Accessibility Standards Compliance
 
-SprintForge aims to meet **WCAG 2.1 AA** standards and follows modern web accessibility best practices.
+Orbit aims to meet **WCAG 2.1 AA** standards and follows modern web accessibility best practices.
 
 ### Current Compliance Level: AA
 
@@ -65,7 +65,7 @@ React.useEffect(() => {
 
 ```html
 <!-- Proper heading hierarchy -->
-<h1>SprintForge Dashboard</h1>
+<h1>Orbit Dashboard</h1>
 <h2>AutoStand Module</h2>
 <h3>Recent Standups</h3>
 
@@ -473,7 +473,7 @@ interface AccessibilityMetrics {
 
 ### Training Materials
 
-- **Developer Onboarding**: Accessibility basics and SprintForge standards
+- **Developer Onboarding**: Accessibility basics and Orbit standards
 - **Testing Workshops**: Hands-on screen reader and keyboard testing
 - **Design Guidelines**: Accessible design principles and patterns
 - **User Research**: Understanding disabled user needs and experiences
@@ -496,4 +496,4 @@ interface AccessibilityMetrics {
 
 ---
 
-**Commitment**: SprintForge is committed to providing an inclusive experience for all users. Accessibility is not an afterthought but a core principle that guides our design and development decisions.
+**Commitment**: Orbit is committed to providing an inclusive experience for all users. Accessibility is not an afterthought but a core principle that guides our design and development decisions.

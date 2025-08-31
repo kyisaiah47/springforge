@@ -114,7 +114,7 @@ export default function DashboardPage() {
 			<div className="flex items-center justify-between">
 				<div>
 					<h1 className="text-3xl font-bold tracking-tight">
-						Welcome to SprintForge
+						Welcome to Orbit
 					</h1>
 					<p className="text-muted-foreground">
 						Your all-in-one developer productivity suite

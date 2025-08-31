@@ -1,15 +1,15 @@
-# SprintForge Onboarding Guide
+# Orbit Onboarding Guide
 
-This document describes the onboarding flow and demo data features in SprintForge.
+This document describes the onboarding flow and demo data features in Orbit.
 
 ## Onboarding Flow
 
-SprintForge includes a comprehensive onboarding experience for new users:
+Orbit includes a comprehensive onboarding experience for new users:
 
 ### 1. Welcome Flow
 
 - **Automatic Trigger**: Shows for first-time users
-- **Multi-step Process**: Introduces SprintForge modules and features
+- **Multi-step Process**: Introduces Orbit modules and features
 - **Demo Data Loading**: Option to load realistic demo data
 - **Guided Tour**: Optional tour of the interface after onboarding
 

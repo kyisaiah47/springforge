@@ -118,7 +118,7 @@ describe("Stale PR Alert Integration", () => {
 						],
 					},
 				],
-				username: "SprintForge PR Radar",
+				username: "Orbit PR Radar",
 				icon_emoji: ":hourglass_flowing_sand:",
 			};
 

@@ -1,6 +1,6 @@
-# SprintForge Product Overview
+# Orbit Product Overview
 
-**Mission:** Deliver a compelling, judge-friendly demo showing how SprintForge streamlines developer workflows with automation and collaboration.
+**Mission:** Deliver a compelling, judge-friendly demo showing how Orbit streamlines developer workflows with automation and collaboration.
 
 ## Core Modules (Demo Path)
 

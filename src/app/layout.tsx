@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SprintForge - Developer Productivity Suite",
+  title: "Orbit - Developer Productivity Suite",
   description:
     "All-in-one developer productivity suite with automated standups, PR insights, retrospectives, and coding challenges",
   keywords: [
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     "Slack integration",
     "team collaboration",
   ],
-  authors: [{ name: "SprintForge Team" }],
-  creator: "SprintForge",
-  publisher: "SprintForge",
+  authors: [{ name: "Orbit Team" }],
+  creator: "Orbit",
+  publisher: "Orbit",
   formatDetection: {
     email: false,
     address: false,

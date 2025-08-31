@@ -1,8 +1,8 @@
-# SprintForge Demo Script
+# Orbit Demo Script
 
 **Duration**: 3 minutes  
 **Target Audience**: Developers, team leads, and engineering managers  
-**Goal**: Showcase SprintForge as the ultimate developer productivity suite
+**Goal**: Showcase Orbit as the ultimate developer productivity suite
 
 ## Pre-Demo Setup Checklist
 
@@ -30,7 +30,7 @@
 
 **[Screen: Landing page or login screen]**
 
-> "Meet SprintForge - the all-in-one developer productivity suite that transforms how teams work together. In just 3 minutes, I'll show you how SprintForge automates your daily workflows, provides intelligent insights, and gamifies team collaboration."
+> "Meet Orbit - the all-in-one developer productivity suite that transforms how teams work together. In just 3 minutes, I'll show you how Orbit automates your daily workflows, provides intelligent insights, and gamifies team collaboration."
 
 **Action**: Click "Sign in with GitHub"
 
@@ -38,7 +38,7 @@
 
 **[Screen: GitHub OAuth flow → Dashboard]**
 
-> "Welcome to your SprintForge dashboard. Four powerful modules, one unified experience."
+> "Welcome to your Orbit dashboard. Four powerful modules, one unified experience."
 
 ### AutoStand Module (0:30-1:00)
 
@@ -48,7 +48,7 @@
 
 **Action**: Show recent standups list
 
-> "Every morning at 9 AM, SprintForge automatically generates standup summaries by analyzing your team's GitHub activity from the last 24 hours."
+> "Every morning at 9 AM, Orbit automatically generates standup summaries by analyzing your team's GitHub activity from the last 24 hours."
 
 **Action**: Click on a standup card to expand details
 
@@ -70,7 +70,7 @@
 
 **Action**: Click on a high-risk PR
 
-> "SprintForge suggests the best reviewers based on code ownership and expertise. Jane is suggested because she owns 85% of the authentication module being modified."
+> "Orbit suggests the best reviewers based on code ownership and expertise. Jane is suggested because she owns 85% of the authentication module being modified."
 
 **Action**: Show stale PR alerts
 
@@ -128,7 +128,7 @@
 
 **[Screen: Return to dashboard or show command palette]**
 
-> "SprintForge unifies your entire development workflow - from automated standups to intelligent PR insights, collaborative retrospectives, and skill development."
+> "Orbit unifies your entire development workflow - from automated standups to intelligent PR insights, collaborative retrospectives, and skill development."
 
 **Action**: Show command palette (Cmd+K)
 
@@ -136,7 +136,7 @@
 
 **[Screen: Show GitHub integration or settings]**
 
-> "Ready to transform your team's productivity? SprintForge integrates seamlessly with your existing GitHub and Slack workflows. Get started today and see the difference automation makes."
+> "Ready to transform your team's productivity? Orbit integrates seamlessly with your existing GitHub and Slack workflows. Get started today and see the difference automation makes."
 
 ---
 
@@ -226,4 +226,4 @@
 
 ---
 
-**Remember**: The goal is to show SprintForge as an essential tool that every development team needs. Focus on the problems it solves and the time it saves, not just the cool technology behind it.
+**Remember**: The goal is to show Orbit as an essential tool that every development team needs. Focus on the problems it solves and the time it saves, not just the cool technology behind it.

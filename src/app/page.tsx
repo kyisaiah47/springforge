@@ -82,7 +82,7 @@ export default function Home() {
 					<h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
 						Welcome to{" "}
 						<span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-							SprintForge
+							Orbit
 						</span>
 					</h1>
 					<p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -124,7 +124,7 @@ export default function Home() {
 				{/* Benefits Section */}
 				<Card className="max-w-4xl mx-auto">
 					<CardHeader className="text-center">
-						<CardTitle className="text-2xl">Why SprintForge?</CardTitle>
+						<CardTitle className="text-2xl">Why Orbit?</CardTitle>
 						<CardDescription className="text-lg">
 							Built by developers, for developers
 						</CardDescription>

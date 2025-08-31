@@ -46,7 +46,7 @@ export function OnboardingFlow({
 	const steps: OnboardingStep[] = [
 		{
 			id: "welcome",
-			title: "Welcome to SprintForge",
+			title: "Welcome to Orbit",
 			description:
 				"Your all-in-one developer productivity suite is ready to streamline your team's workflow.",
 			icon: Sparkles,
@@ -56,7 +56,7 @@ export function OnboardingFlow({
 			id: "modules",
 			title: "Explore the Modules",
 			description:
-				"SprintForge includes four powerful modules to enhance your development process.",
+				"Orbit includes four powerful modules to enhance your development process.",
 			icon: Users,
 			completed: false,
 		},
@@ -142,10 +142,10 @@ export function OnboardingFlow({
 						</div>
 						<div>
 							<h3 className="text-xl font-semibold mb-2">
-								Welcome to SprintForge!
+								Welcome to Orbit!
 							</h3>
 							<p className="text-muted-foreground">
-								SprintForge is designed to streamline your development workflow
+								Orbit is designed to streamline your development workflow
 								with automated standups, PR insights, team retrospectives, and
 								coding challenges.
 							</p>

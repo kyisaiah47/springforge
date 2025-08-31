@@ -1,6 +1,6 @@
-# SprintForge Deployment Guide
+# Orbit Deployment Guide
 
-This guide covers deploying SprintForge to production using Vercel with automated CI/CD.
+This guide covers deploying Orbit to production using Vercel with automated CI/CD.
 
 ## Prerequisites
 

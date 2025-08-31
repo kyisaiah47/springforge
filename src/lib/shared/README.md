@@ -1,6 +1,6 @@
 # API Foundation and Error Handling
 
-This directory contains the core API infrastructure for SprintForge, providing standardized error handling, validation, authentication, and webhook verification.
+This directory contains the core API infrastructure for Orbit, providing standardized error handling, validation, authentication, and webhook verification.
 
 ## Components
 

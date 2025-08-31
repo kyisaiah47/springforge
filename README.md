@@ -1,8 +1,8 @@
-# SprintForge
+# Orbit
 
 **An all-in-one developer productivity suite that streamlines team workflows through automation and gamification.**
 
-SprintForge integrates with GitHub and Slack to provide four powerful modules: AutoStand for automated daily standups, PR Radar for intelligent pull request management, Retro Arena for collaborative retrospectives, and Debug Arcade for coding challenges.
+Orbit integrates with GitHub and Slack to provide four powerful modules: AutoStand for automated daily standups, PR Radar for intelligent pull request management, Retro Arena for collaborative retrospectives, and Debug Arcade for coding challenges.
 
 ## 🚀 Features
 
@@ -103,7 +103,7 @@ Visit [http://localhost:3000](http://localhost:3000) and sign in with GitHub!
 
 ## 🗄️ Database Schema
 
-SprintForge uses PostgreSQL with Supabase, featuring Row Level Security (RLS) for multi-tenant data isolation.
+Orbit uses PostgreSQL with Supabase, featuring Row Level Security (RLS) for multi-tenant data isolation.
 
 ### Custom Types
 
@@ -461,7 +461,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions including:
 
 ## 🧪 Testing
 
-SprintForge includes comprehensive testing:
+Orbit includes comprehensive testing:
 
 ```bash
 # Unit tests for business logic
@@ -497,7 +497,7 @@ npm run test:e2e
 
 ## 📊 Monitoring and Health
 
-SprintForge includes built-in monitoring:
+Orbit includes built-in monitoring:
 
 - **Health Endpoint**: `/api/health` - System status and dependencies
 - **Structured Logging**: JSON logs for production debugging

@@ -51,7 +51,7 @@ describe("GitHubClient", () => {
 					headers: expect.objectContaining({
 						Authorization: `Bearer ${mockToken}`,
 						Accept: "application/vnd.github.v3+json",
-						"User-Agent": "SprintForge/1.0",
+						"User-Agent": "Orbit/1.0",
 					}),
 				})
 			);

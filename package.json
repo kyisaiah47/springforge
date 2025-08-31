@@ -1,5 +1,5 @@
 {
-	"name": "sprintforge",
+	"name": "orbit",
 	"version": "1.0.0",
 	"description": "All-in-one developer productivity suite with automated standups, PR insights, retrospectives, and coding challenges",
 	"private": true,
@@ -16,19 +16,19 @@
 		"supabase",
 		"typescript"
 	],
-	"homepage": "https://sprintforge.dev",
+	"homepage": "https://orbit.dev",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/your-username/sprintforge.git"
+		"url": "https://github.com/your-username/orbit.git"
 	},
 	"bugs": {
-		"url": "https://github.com/your-username/sprintforge/issues"
+		"url": "https://github.com/your-username/orbit/issues"
 	},
 	"license": "MIT",
 	"author": {
-		"name": "SprintForge Team",
-		"email": "team@sprintforge.dev",
-		"url": "https://sprintforge.dev"
+		"name": "Orbit Team",
+		"email": "team@orbit.dev",
+		"url": "https://orbit.dev"
 	},
 	"contributors": [
 		{

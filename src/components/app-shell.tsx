@@ -56,12 +56,12 @@ export function AppShell({ children }: AppShellProps) {
 							<div
 								className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
 								role="img"
-								aria-label="SprintForge logo"
+								aria-label="Orbit logo"
 							>
 								<span className="text-sm font-bold">SF</span>
 							</div>
 							<div className="flex flex-col">
-								<span className="text-sm font-semibold">SprintForge</span>
+								<span className="text-sm font-semibold">Orbit</span>
 								<span className="text-xs text-muted-foreground">
 									Developer Suite
 								</span>

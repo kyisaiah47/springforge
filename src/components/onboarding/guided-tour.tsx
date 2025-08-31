@@ -165,11 +165,11 @@ export function GuidedTour({ isOpen, onClose, steps }: GuidedTourProps) {
 	);
 }
 
-// Default tour steps for SprintForge
+// Default tour steps for Orbit
 export const defaultTourSteps: TourStep[] = [
 	{
 		id: "welcome",
-		title: "Welcome to SprintForge!",
+		title: "Welcome to Orbit!",
 		content:
 			"Let's take a quick tour of your new developer productivity suite. This will only take a minute.",
 	},
@@ -216,6 +216,6 @@ export const defaultTourSteps: TourStep[] = [
 		id: "complete",
 		title: "You're All Set!",
 		content:
-			"That's it! You're ready to boost your team's productivity with SprintForge. Explore the modules and discover what works best for your workflow.",
+			"That's it! You're ready to boost your team's productivity with Orbit. Explore the modules and discover what works best for your workflow.",
 	},
 ];

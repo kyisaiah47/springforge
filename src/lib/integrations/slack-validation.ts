@@ -235,8 +235,8 @@ export async function testSlackIntegration(
 		if (settings.webhook_url) {
 			try {
 				await client.sendWebhookMessage({
-					text: "🧪 SprintForge webhook test - connection successful!",
-					username: "SprintForge Test",
+					text: "🧪 Orbit webhook test - connection successful!",
+					username: "Orbit Test",
 					icon_emoji: ":test_tube:",
 				});
 				result.webhook_test = true;
@@ -254,8 +254,8 @@ export async function testSlackIntegration(
 		if (settings.bot_token && options?.channel) {
 			try {
 				await client.sendBotMessage(options.channel, {
-					text: "🧪 SprintForge bot test - connection successful!",
-					username: "SprintForge Test",
+					text: "🧪 Orbit bot test - connection successful!",
+					username: "Orbit Test",
 					icon_emoji: ":test_tube:",
 				});
 				result.bot_test = true;
@@ -325,9 +325,9 @@ export function getSlackWebhookInstructions(): {
 		steps: [
 			"Go to your Slack workspace settings",
 			"Navigate to 'Apps' and search for 'Incoming Webhooks'",
-			"Click 'Add to Slack' and select the channel for SprintForge notifications",
+			"Click 'Add to Slack' and select the channel for Orbit notifications",
 			"Copy the webhook URL that starts with 'https://hooks.slack.com/services/'",
-			"Paste the webhook URL in the SprintForge integration settings",
+			"Paste the webhook URL in the Orbit integration settings",
 			"Test the connection to verify it's working",
 		],
 		help_url: "https://api.slack.com/messaging/webhooks",

@@ -119,7 +119,7 @@ export class GitHubClient {
 			headers: {
 				Authorization: `Bearer ${this.accessToken}`,
 				Accept: "application/vnd.github.v3+json",
-				"User-Agent": "SprintForge/1.0",
+				"User-Agent": "Orbit/1.0",
 				...options.headers,
 			},
 		});

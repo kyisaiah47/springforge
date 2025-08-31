@@ -229,7 +229,7 @@ export async function POST(request: NextRequest) {
 					headers: {
 						Authorization: `Bearer ${integration.access_token}`,
 						Accept: "application/vnd.github.v3+json",
-						"User-Agent": "SprintForge/1.0",
+						"User-Agent": "Orbit/1.0",
 					},
 				}
 			);

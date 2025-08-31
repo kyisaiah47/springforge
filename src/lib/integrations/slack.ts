@@ -173,7 +173,7 @@ export class SlackClient {
 	async testWebhook(): Promise<boolean> {
 		try {
 			await this.sendWebhookMessage({
-				text: "SprintForge webhook test - connection successful! 🚀",
+				text: "Orbit webhook test - connection successful! 🚀",
 			});
 			return true;
 		} catch (error) {

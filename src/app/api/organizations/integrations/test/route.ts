@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-						text: "🧪 SprintForge integration test - this message confirms your Slack webhook is working correctly!",
-						username: "SprintForge",
+						text: "🧪 Orbit integration test - this message confirms your Slack webhook is working correctly!",
+						username: "Orbit",
 						icon_emoji: ":rocket:",
 					}),
 				});
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
 				const response = await fetch("https://api.github.com/user", {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
-						"User-Agent": "SprintForge",
+						"User-Agent": "Orbit",
 					},
 				});
 

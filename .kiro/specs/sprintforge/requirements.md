@@ -2,17 +2,17 @@
 
 ## Introduction
 
-SprintForge is an all-in-one developer productivity suite designed to streamline team workflows through automation and gamification. The platform consists of four integrated modules: AutoStand for automated standup generation, PR Radar for pull request management, Retro Arena for collaborative retrospectives, and Debug Arcade for coding challenges. Built as a Next.js web application with Supabase backend, SprintForge integrates with GitHub and Slack to provide seamless developer experience automation.
+Orbit is an all-in-one developer productivity suite designed to streamline team workflows through automation and gamification. The platform consists of four integrated modules: AutoStand for automated standup generation, PR Radar for pull request management, Retro Arena for collaborative retrospectives, and Debug Arcade for coding challenges. Built as a Next.js web application with Supabase backend, Orbit integrates with GitHub and Slack to provide seamless developer experience automation.
 
 ## Requirements
 
 ### Requirement 1: User Authentication and Team Management
 
-**User Story:** As a developer, I want to authenticate with GitHub and manage my team settings, so that I can access SprintForge features and configure team-specific integrations.
+**User Story:** As a developer, I want to authenticate with GitHub and manage my team settings, so that I can access Orbit features and configure team-specific integrations.
 
 #### Acceptance Criteria
 
-1. WHEN a user visits SprintForge THEN the system SHALL display GitHub OAuth login
+1. WHEN a user visits Orbit THEN the system SHALL display GitHub OAuth login
 2. WHEN a user successfully authenticates THEN the system SHALL create or update their profile with GitHub data
 3. WHEN a user accesses team settings THEN the system SHALL allow configuration of Slack webhook URLs
 4. WHEN a user configures GitHub repository access THEN the system SHALL validate and store repository permissions
@@ -72,7 +72,7 @@ SprintForge is an all-in-one developer productivity suite designed to streamline
 
 ### Requirement 6: System Architecture and Integration
 
-**User Story:** As a system administrator, I want a scalable web application with reliable integrations, so that SprintForge can handle team workflows without downtime.
+**User Story:** As a system administrator, I want a scalable web application with reliable integrations, so that Orbit can handle team workflows without downtime.
 
 #### Acceptance Criteria
 

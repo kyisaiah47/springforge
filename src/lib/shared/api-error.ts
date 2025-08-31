@@ -1,5 +1,5 @@
 /**
- * Standardized API error interface for consistent error handling across SprintForge
+ * Standardized API error interface for consistent error handling across Orbit
  */
 export interface APIError {
 	error: {

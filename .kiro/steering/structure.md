@@ -1,4 +1,4 @@
-# SprintForge Structure Overview
+# Orbit Structure Overview
 
 **Mission:** Maintain a clean, modular Next.js 14+ codebase that makes it easy to demo, extend, and onboard contributors quickly.
 

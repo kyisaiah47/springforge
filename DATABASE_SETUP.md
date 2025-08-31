@@ -1,6 +1,6 @@
-# SprintForge Database Setup
+# Orbit Database Setup
 
-This document provides instructions for setting up the Supabase database and authentication for SprintForge.
+This document provides instructions for setting up the Supabase database and authentication for Orbit.
 
 ## Prerequisites
 

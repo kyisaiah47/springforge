@@ -1,6 +1,6 @@
-# SprintForge API Documentation
+# Orbit API Documentation
 
-This document provides comprehensive API documentation for SprintForge, including authentication, endpoints, request/response formats, and examples.
+This document provides comprehensive API documentation for Orbit, including authentication, endpoints, request/response formats, and examples.
 
 ## Base URL
 
@@ -9,7 +9,7 @@ This document provides comprehensive API documentation for SprintForge, includin
 
 ## Authentication
 
-SprintForge uses Supabase Auth with GitHub OAuth. All API endpoints require authentication unless otherwise specified.
+Orbit uses Supabase Auth with GitHub OAuth. All API endpoints require authentication unless otherwise specified.
 
 ### Authentication Flow
 
@@ -793,9 +793,9 @@ X-RateLimit-Reset: 1642262400
 ### JavaScript/TypeScript
 
 ```typescript
-import { SprintForgeClient } from '@sprintforge/sdk';
+import { OrbitClient } from '@sprintforge/sdk';
 
-const client = new SprintForgeClient({
+const client = new OrbitClient({
   baseUrl: 'https://api.sprintforge.com',
   apiKey: 'your-api-key'
 });

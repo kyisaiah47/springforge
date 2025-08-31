@@ -1,5 +1,5 @@
 /**
- * Shared API utilities for SprintForge
+ * Shared API utilities for Orbit
  *
  * This module exports all the core API infrastructure components:
  * - Error handling and standardized API responses

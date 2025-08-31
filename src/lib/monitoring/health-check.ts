@@ -75,7 +75,7 @@ class HealthChecker {
 			const response = await fetch("https://api.github.com/zen", {
 				method: "GET",
 				headers: {
-					"User-Agent": "SprintForge-HealthCheck",
+					"User-Agent": "Orbit-HealthCheck",
 				},
 			});
 
