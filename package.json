@@ -1,7 +1,46 @@
 {
 	"name": "sprintforge",
-	"version": "0.1.0",
+	"version": "1.0.0",
+	"description": "All-in-one developer productivity suite with automated standups, PR insights, retrospectives, and coding challenges",
 	"private": true,
+	"keywords": [
+		"developer-productivity",
+		"automated-standups",
+		"pull-request-management",
+		"retrospectives",
+		"coding-challenges",
+		"github-integration",
+		"slack-integration",
+		"team-collaboration",
+		"nextjs",
+		"supabase",
+		"typescript"
+	],
+	"homepage": "https://sprintforge.dev",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/your-username/sprintforge.git"
+	},
+	"bugs": {
+		"url": "https://github.com/your-username/sprintforge/issues"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "SprintForge Team",
+		"email": "team@sprintforge.dev",
+		"url": "https://sprintforge.dev"
+	},
+	"contributors": [
+		{
+			"name": "Your Name",
+			"email": "your.email@example.com",
+			"url": "https://github.com/your-username"
+		}
+	],
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=8.0.0"
+	},
 	"scripts": {
 		"dev": "next dev --turbopack",
 		"build": "next build --turbopack",
@@ -9,10 +48,16 @@
 		"lint": "eslint",
 		"test": "vitest",
 		"test:run": "vitest run",
+		"test:coverage": "vitest run --coverage",
+		"type-check": "tsc --noEmit",
 		"db:migrate": "tsx scripts/run-migrations.ts",
 		"db:seed": "tsx scripts/seed-demo.ts",
 		"db:reset": "npm run db:migrate && npm run db:seed",
-		"db:test": "tsx scripts/test-demo-seed.ts"
+		"db:test": "tsx scripts/test-demo-seed.ts",
+		"deploy:check": "npm run lint && npm run type-check && npm run test:run",
+		"deploy:migrate": "npm run db:migrate",
+		"deploy:verify": "tsx scripts/verify-deployment.ts",
+		"health-check": "curl -f http://localhost:3000/api/health || exit 1"
 	},
 	"dependencies": {
 		"@radix-ui/react-avatar": "^1.1.10",

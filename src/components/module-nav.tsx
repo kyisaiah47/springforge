@@ -61,11 +61,12 @@ export function ModuleNav() {
 	// Handle keyboard shortcuts
 	React.useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
-			// Only handle shortcuts when not in input fields
+			// Only handle shortcuts when not in input fields or when command palette is open
 			if (
 				event.target instanceof HTMLInputElement ||
 				event.target instanceof HTMLTextAreaElement ||
-				event.target instanceof HTMLSelectElement
+				event.target instanceof HTMLSelectElement ||
+				document.querySelector('[role="dialog"]') // Command palette is open
 			) {
 				return;
 			}
@@ -116,16 +117,31 @@ export function ModuleNav() {
 			<SidebarGroup>
 				<SidebarGroupLabel>Modules</SidebarGroupLabel>
 				<SidebarGroupContent>
-					<SidebarMenu>
+					<SidebarMenu
+						role="list"
+						aria-label="Module navigation"
+					>
 						{modules.map((module) => (
-							<SidebarMenuItem key={module.title}>
+							<SidebarMenuItem
+								key={module.title}
+								role="listitem"
+							>
 								<SidebarMenuButton
 									asChild
 									isActive={pathname.startsWith(module.url)}
 									tooltip={`${module.title} (${module.shortcut})`}
 								>
-									<Link href={module.url}>
-										<module.icon className="h-4 w-4" />
+									<Link
+										href={module.url}
+										aria-label={`Navigate to ${module.title} (keyboard shortcut: ${module.shortcut})`}
+										aria-current={
+											pathname.startsWith(module.url) ? "page" : undefined
+										}
+									>
+										<module.icon
+											className="h-4 w-4"
+											aria-hidden="true"
+										/>
 										<span>{module.title}</span>
 									</Link>
 								</SidebarMenuButton>

@@ -46,10 +46,18 @@ export function AppShell({ children }: AppShellProps) {
 	return (
 		<SidebarProvider>
 			<div className="flex min-h-screen w-full">
-				<Sidebar data-tour="sidebar">
+				<Sidebar
+					data-tour="sidebar"
+					role="navigation"
+					aria-label="Main navigation"
+				>
 					<SidebarHeader className="border-b border-sidebar-border">
 						<div className="flex items-center gap-2 px-4 py-2">
-							<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+							<div
+								className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+								role="img"
+								aria-label="SprintForge logo"
+							>
 								<span className="text-sm font-bold">SF</span>
 							</div>
 							<div className="flex flex-col">
@@ -71,11 +79,16 @@ export function AppShell({ children }: AppShellProps) {
 										variant="ghost"
 										className="h-8 w-full justify-start gap-2 px-2"
 										data-tour="user-menu"
+										aria-label={`User menu for ${
+											user?.user_metadata?.full_name || "User"
+										}`}
 									>
 										<Avatar className="h-6 w-6">
 											<AvatarImage
 												src={user?.user_metadata?.avatar_url}
-												alt={user?.user_metadata?.full_name || "User"}
+												alt={`${
+													user?.user_metadata?.full_name || "User"
+												} avatar`}
 											/>
 											<AvatarFallback className="text-xs">
 												{userInitials}
@@ -94,18 +107,25 @@ export function AppShell({ children }: AppShellProps) {
 								<DropdownMenuContent
 									align="end"
 									className="w-56"
+									aria-label="User account menu"
 								>
 									<DropdownMenuLabel>My Account</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									<DropdownMenuItem asChild>
 										<Link href="/settings">
-											<User className="mr-2 h-4 w-4" />
+											<User
+												className="mr-2 h-4 w-4"
+												aria-hidden="true"
+											/>
 											Profile
 										</Link>
 									</DropdownMenuItem>
 									<DropdownMenuItem asChild>
 										<Link href="/settings">
-											<Settings className="mr-2 h-4 w-4" />
+											<Settings
+												className="mr-2 h-4 w-4"
+												aria-hidden="true"
+											/>
 											Settings
 										</Link>
 									</DropdownMenuItem>
@@ -114,17 +134,32 @@ export function AppShell({ children }: AppShellProps) {
 										onClick={() =>
 											setTheme(theme === "dark" ? "light" : "dark")
 										}
+										aria-label={`Switch to ${
+											theme === "dark" ? "light" : "dark"
+										} theme`}
 									>
 										{theme === "dark" ? (
-											<Sun className="mr-2 h-4 w-4" />
+											<Sun
+												className="mr-2 h-4 w-4"
+												aria-hidden="true"
+											/>
 										) : (
-											<Moon className="mr-2 h-4 w-4" />
+											<Moon
+												className="mr-2 h-4 w-4"
+												aria-hidden="true"
+											/>
 										)}
 										Toggle Theme
 									</DropdownMenuItem>
 									<DropdownMenuSeparator />
-									<DropdownMenuItem onClick={() => signOut()}>
-										<LogOut className="mr-2 h-4 w-4" />
+									<DropdownMenuItem
+										onClick={() => signOut()}
+										aria-label="Sign out of your account"
+									>
+										<LogOut
+											className="mr-2 h-4 w-4"
+											aria-hidden="true"
+										/>
 										Sign Out
 									</DropdownMenuItem>
 								</DropdownMenuContent>
@@ -134,13 +169,20 @@ export function AppShell({ children }: AppShellProps) {
 				</Sidebar>
 
 				<div className="flex flex-1 flex-col">
-					<header className="flex h-14 items-center gap-4 border-b bg-background px-6">
-						<SidebarTrigger />
+					<header
+						className="flex h-14 items-center gap-4 border-b bg-background px-6"
+						role="banner"
+						aria-label="Application header"
+					>
+						<SidebarTrigger aria-label="Toggle navigation sidebar" />
 						<div className="flex flex-1 items-center justify-between">
 							<div className="flex items-center gap-2">
 								<span className="text-sm text-muted-foreground">
 									Press{" "}
-									<kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+									<kbd
+										className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"
+										aria-label="Command K keyboard shortcut"
+									>
 										<span className="text-xs">⌘</span>K
 									</kbd>{" "}
 									to open command palette
@@ -149,7 +191,14 @@ export function AppShell({ children }: AppShellProps) {
 						</div>
 					</header>
 
-					<main className="flex-1 overflow-auto">{children}</main>
+					<main
+						className="flex-1 overflow-auto"
+						role="main"
+						aria-label="Main content"
+						tabIndex={-1}
+					>
+						{children}
+					</main>
 				</div>
 			</div>
 

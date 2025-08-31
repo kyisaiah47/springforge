@@ -76,11 +76,16 @@ export function CommandPalette() {
 				e.preventDefault();
 				setOpen((open) => !open);
 			}
+			// ESC key to close
+			if (e.key === "Escape" && open) {
+				e.preventDefault();
+				setOpen(false);
+			}
 		};
 
 		document.addEventListener("keydown", down);
 		return () => document.removeEventListener("keydown", down);
-	}, []);
+	}, [open]);
 
 	const runCommand = React.useCallback((command: () => unknown) => {
 		setOpen(false);
@@ -91,46 +96,86 @@ export function CommandPalette() {
 		<CommandDialog
 			open={open}
 			onOpenChange={setOpen}
+			aria-label="Command palette"
+			role="dialog"
 		>
-			<CommandInput placeholder="Type a command or search..." />
-			<CommandList>
+			<CommandInput
+				placeholder="Type a command or search..."
+				aria-label="Search commands"
+			/>
+			<CommandList
+				role="listbox"
+				aria-label="Available commands"
+			>
 				<CommandEmpty>No results found.</CommandEmpty>
-				<CommandGroup heading="Navigation">
+				<CommandGroup
+					heading="Navigation"
+					role="group"
+					aria-label="Navigation commands"
+				>
 					{navigationItems.map((item) => (
 						<CommandItem
 							key={item.url}
 							value={`${item.title} ${item.keywords.join(" ")}`}
 							onSelect={() => runCommand(() => router.push(item.url))}
+							role="option"
+							aria-label={`Navigate to ${item.title}`}
 						>
-							<item.icon className="mr-2 h-4 w-4" />
+							<item.icon
+								className="mr-2 h-4 w-4"
+								aria-hidden="true"
+							/>
 							<span>{item.title}</span>
 						</CommandItem>
 					))}
 				</CommandGroup>
 				<CommandSeparator />
-				<CommandGroup heading="Theme">
+				<CommandGroup
+					heading="Theme"
+					role="group"
+					aria-label="Theme commands"
+				>
 					<CommandItem
 						value="toggle theme light"
 						onSelect={() => runCommand(() => setTheme("light"))}
+						role="option"
+						aria-label="Switch to light theme"
 					>
-						<Sun className="mr-2 h-4 w-4" />
+						<Sun
+							className="mr-2 h-4 w-4"
+							aria-hidden="true"
+						/>
 						<span>Light Theme</span>
 					</CommandItem>
 					<CommandItem
 						value="toggle theme dark"
 						onSelect={() => runCommand(() => setTheme("dark"))}
+						role="option"
+						aria-label="Switch to dark theme"
 					>
-						<Moon className="mr-2 h-4 w-4" />
+						<Moon
+							className="mr-2 h-4 w-4"
+							aria-hidden="true"
+						/>
 						<span>Dark Theme</span>
 					</CommandItem>
 				</CommandGroup>
 				<CommandSeparator />
-				<CommandGroup heading="Account">
+				<CommandGroup
+					heading="Account"
+					role="group"
+					aria-label="Account commands"
+				>
 					<CommandItem
 						value="sign out logout"
 						onSelect={() => runCommand(() => signOut())}
+						role="option"
+						aria-label="Sign out of your account"
 					>
-						<LogOut className="mr-2 h-4 w-4" />
+						<LogOut
+							className="mr-2 h-4 w-4"
+							aria-hidden="true"
+						/>
 						<span>Sign Out</span>
 					</CommandItem>
 				</CommandGroup>

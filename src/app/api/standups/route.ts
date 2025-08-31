@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAutoStandService } from "@/lib/modules/autostand/service";
 import { createAPIError } from "@/lib/shared/api-error";
+import { logger, withMonitoring, generateRequestId } from "@/lib/monitoring";
 
 const getStandupsSchema = z.object({
 	member_id: z.string().uuid().optional(),
@@ -20,7 +21,10 @@ const getStandupsSchema = z.object({
 	order_dir: z.enum(["asc", "desc"]).default("desc"),
 });
 
-export async function GET(request: NextRequest) {
+export const GET = withMonitoring(async function GET(request: NextRequest) {
+	const requestId = generateRequestId();
+	logger.info("GET /api/standups", { requestId });
+
 	try {
 		const supabase = await createClient();
 
@@ -89,9 +93,14 @@ export async function GET(request: NextRequest) {
 			validatedParams
 		);
 
+		logger.info("Standups retrieved successfully", {
+			requestId,
+			count: Array.isArray(result.standups) ? result.standups.length : 0,
+			orgId: member.org_id,
+		});
 		return NextResponse.json(result);
 	} catch (error) {
-		console.error("Get standups error:", error);
+		logger.error("Get standups error", error as Error, { requestId });
 
 		if (error instanceof z.ZodError) {
 			return NextResponse.json(
@@ -118,4 +127,4 @@ export async function GET(request: NextRequest) {
 			{ status: 500 }
 		);
 	}
-}
+}, "GET /api/standups");
