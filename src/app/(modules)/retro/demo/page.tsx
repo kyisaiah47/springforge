@@ -201,9 +201,9 @@ export default function RetroDemoPage() {
 			</div>
 
 			{/* Demo Instructions */}
-			<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-				<h3 className="font-semibold text-blue-900 mb-2">Demo Instructions</h3>
-				<ul className="text-sm text-blue-800 space-y-1">
+			<div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+				<h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Demo Instructions</h3>
+				<ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
 					<li>
 						• Add new notes by clicking &quot;Add Note&quot; in any column
 					</li>

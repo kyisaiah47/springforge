@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
 			.from("members")
 			.select("org_id")
 			.eq("email", user.email!)
+			.is("deleted_at", null)
 			.single();
 
 		if (memberError || !member) {
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
 
 		// Parse and validate request body
 		const body = await request.json();
+		console.log("Generate standup request body:", body);
 		const validatedData = generateStandupSchema.parse(body);
 
 		// Verify member belongs to same organization
@@ -52,6 +54,7 @@ export async function POST(request: NextRequest) {
 			.from("members")
 			.select("org_id")
 			.eq("id", validatedData.member_id)
+			.is("deleted_at", null)
 			.single();
 
 		if (targetMemberError || !targetMember) {

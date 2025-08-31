@@ -29,27 +29,84 @@ export default function StandupsPage() {
 		null
 	);
 	const [isLoadingUser, setIsLoadingUser] = useState(true);
+	const [teamStats, setTeamStats] = useState({
+		totalMembers: 0,
+		standupsToday: 0,
+		activeRepos: 0,
+	});
 
 	// Load current user info on mount
 	useEffect(() => {
 		loadCurrentUser();
+		loadTeamStats();
 	}, []);
+
+	const loadTeamStats = async () => {
+		try {
+			// Load team members
+			const membersResponse = await fetch("/api/organizations/members");
+			if (membersResponse.ok) {
+				const membersData = await membersResponse.json();
+				const totalMembers = membersData.members?.length || 0;
+				
+				// Load today's standups
+				const today = new Date().toISOString().split('T')[0];
+				const standupsResponse = await fetch(`/api/standups?date_from=${today}&date_to=${today}`);
+				let standupsToday = 0;
+				if (standupsResponse.ok) {
+					const standupsData = await standupsResponse.json();
+					standupsToday = standupsData.standups?.length || 0;
+				}
+
+				setTeamStats({
+					totalMembers,
+					standupsToday,
+					activeRepos: 0, // TODO: Add repo count from GitHub integration
+				});
+			}
+		} catch (error) {
+			console.error("Error loading team stats:", error);
+		}
+	};
 
 	const loadCurrentUser = async () => {
 		try {
-			// This would typically come from auth context or API
-			// For now, we'll simulate it
-			setCurrentUser({
-				id: "user-1",
-				github_login: "demo-user",
-				avatar_url: null,
-			});
+			// Get current user from the organizations members API
+			const response = await fetch("/api/organizations/members");
+			if (!response.ok) {
+				throw new Error("Failed to fetch current user");
+			}
+			
+			const data = await response.json();
+			// Find the current user in the members list
+			const currentUserEmail = await getCurrentUserEmail();
+			const currentMember = data.members.find((member: any) => 
+				member.email === currentUserEmail
+			);
+			
+			if (currentMember) {
+				setCurrentUser({
+					id: currentMember.id,
+					github_login: currentMember.github_login || "unknown",
+					avatar_url: currentMember.avatar_url,
+				});
+			} else {
+				throw new Error("Current user not found in organization");
+			}
 		} catch (error) {
 			console.error("Failed to load user:", error);
 			toast.error("Failed to load user information");
 		} finally {
 			setIsLoadingUser(false);
 		}
+	};
+
+	const getCurrentUserEmail = async () => {
+		// Get current user email from Supabase auth
+		const { createClient } = await import("@/lib/supabase/client");
+		const supabase = createClient();
+		const { data: { user } } = await supabase.auth.getUser();
+		return user?.email;
 	};
 
 	const handleFetchStandups = async (
@@ -109,6 +166,9 @@ export default function StandupsPage() {
 				toast.info("Standup already exists for today");
 			}
 
+			// Refresh stats to show updated standup count
+			loadTeamStats();
+
 			// Extract activity from the generated standup
 			if (result.standup.raw_github_data) {
 				setRecentActivity(
@@ -154,8 +214,8 @@ export default function StandupsPage() {
 						<Users className="size-4 text-muted-foreground" />
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">12</div>
-						<p className="text-xs text-muted-foreground">Active this week</p>
+						<div className="text-2xl font-bold">{teamStats.totalMembers}</div>
+						<p className="text-xs text-muted-foreground">In your organization</p>
 					</CardContent>
 				</Card>
 
@@ -167,9 +227,9 @@ export default function StandupsPage() {
 						<Activity className="size-4 text-muted-foreground" />
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">8</div>
+						<div className="text-2xl font-bold">{teamStats.standupsToday}</div>
 						<p className="text-xs text-muted-foreground">
-							Generated automatically
+							Generated today
 						</p>
 					</CardContent>
 				</Card>
@@ -182,8 +242,10 @@ export default function StandupsPage() {
 						<Plus className="size-4 text-muted-foreground" />
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">24</div>
-						<p className="text-xs text-muted-foreground">Commits this week</p>
+						<div className="text-2xl font-bold">
+							{recentActivity?.commits?.length || 0}
+						</div>
+						<p className="text-xs text-muted-foreground">Recent commits</p>
 					</CardContent>
 				</Card>
 			</div>

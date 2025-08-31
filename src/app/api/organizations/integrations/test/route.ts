@@ -27,10 +27,11 @@ export async function POST(request: NextRequest) {
 			.from("members")
 			.select("org_id, role")
 			.eq("email", user.email!)
-			.eq("deleted_at", null)
+			.is("deleted_at", null)
 			.single();
 
 		if (memberError || !member) {
+			console.error("Test API Member error:", memberError);
 			return NextResponse.json({ error: "Member not found" }, { status: 404 });
 		}
 

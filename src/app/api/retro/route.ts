@@ -46,6 +46,7 @@ export const GET = withMonitoring(async function GET(request: NextRequest) {
 			.from("members")
 			.select("org_id, id")
 			.eq("email", user.email!)
+			.is("deleted_at", null)
 			.single();
 
 		if (memberError || !member) {
@@ -66,6 +67,7 @@ export const GET = withMonitoring(async function GET(request: NextRequest) {
 				.from("members")
 				.select("org_id")
 				.eq("id", validatedParams.created_by)
+				.is("deleted_at", null)
 				.single();
 
 			if (targetMemberError || !targetMember) {
@@ -151,6 +153,7 @@ export const POST = withMonitoring(async function POST(request: NextRequest) {
 			.from("members")
 			.select("org_id, id")
 			.eq("email", user.email!)
+			.is("deleted_at", null)
 			.single();
 
 		if (memberError || !member) {

@@ -31,10 +31,11 @@ export async function GET() {
 			.from("members")
 			.select("org_id, role")
 			.eq("email", user.email!)
-			.eq("deleted_at", null)
+			.is("deleted_at", null)
 			.single();
 
 		if (memberError || !member) {
+			console.error("Member error:", memberError);
 			return NextResponse.json({ error: "Member not found" }, { status: 404 });
 		}
 
@@ -43,7 +44,7 @@ export async function GET() {
 			.from("members")
 			.select("*")
 			.eq("org_id", member.org_id)
-			.eq("deleted_at", null)
+			.is("deleted_at", null)
 			.order("created_at", { ascending: true });
 
 		if (membersError) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Radar, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +9,7 @@ import {
 	PRFilters,
 	StaleAlerts,
 } from "@/components/modules/pr-radar";
+import { toast } from "sonner";
 import type {
 	GetPRInsightsRequest,
 	GetPRInsightsResponse,
@@ -16,128 +17,69 @@ import type {
 	ReviewerSuggestion,
 } from "@/lib/modules/pr-radar/types";
 
-// Mock data for demonstration
-const mockPRInsights: GetPRInsightsResponse["pr_insights"] = [
-	{
-		id: "1",
-		org_id: "org-1",
-		repo: "sprintforge/frontend",
-		number: 123,
-		author_member_id: "member-1",
-		additions: 245,
-		deletions: 67,
-		files_changed: 8,
-		tests_changed: 3,
-		touched_paths: ["src/components/", "src/lib/"],
-		size_score: 6.2,
-		risk_score: 4.8,
-		suggested_reviewers: ["alice", "bob"],
-		status: "open",
-		opened_at: "2024-01-15T10:30:00Z",
-		updated_at: "2024-01-16T14:20:00Z",
-		author_member: {
-			github_login: "john-dev",
-			avatar_url: "https://github.com/john-dev.png",
-		},
-	},
-	{
-		id: "2",
-		org_id: "org-1",
-		repo: "sprintforge/backend",
-		number: 456,
-		author_member_id: "member-2",
-		additions: 89,
-		deletions: 23,
-		files_changed: 4,
-		tests_changed: 2,
-		touched_paths: ["src/api/", "src/lib/"],
-		size_score: 3.1,
-		risk_score: 8.7,
-		suggested_reviewers: ["charlie", "diana"],
-		status: "open",
-		opened_at: "2024-01-14T09:15:00Z",
-		updated_at: "2024-01-14T16:45:00Z",
-		author_member: {
-			github_login: "sarah-eng",
-			avatar_url: "https://github.com/sarah-eng.png",
-		},
-	},
-];
-
-const mockStaleAlerts: StalePRAlert[] = [
-	{
-		pr_insight: mockPRInsights[1],
-		days_stale: 3,
-		last_activity: "2024-01-14T16:45:00Z",
-		alert_level: "warning",
-	},
-];
-
-const mockReviewerSuggestions: ReviewerSuggestion[] = [
-	{
-		github_login: "alice",
-		member_id: "member-3",
-		confidence_score: 0.85,
-		reasoning: [
-			"Primary contributor to components directory",
-			"Recently reviewed similar UI changes",
-		],
-		expertise_areas: ["React", "TypeScript", "UI Components"],
-	},
-	{
-		github_login: "bob",
-		member_id: "member-4",
-		confidence_score: 0.72,
-		reasoning: [
-			"Has experience with authentication flows",
-			"Familiar with the codebase structure",
-		],
-		expertise_areas: ["Authentication", "Backend", "Security"],
-	},
-];
-
-const mockAvailableRepos = ["sprintforge/frontend", "sprintforge/backend"];
-const mockAvailableAuthors = [
-	{ github_login: "john-dev", member_id: "member-1" },
-	{ github_login: "sarah-eng", member_id: "member-2" },
-];
-
 export default function PRRadarPage() {
-	const [prInsights] = useState(mockPRInsights);
-	const [staleAlerts, setStaleAlerts] = useState(mockStaleAlerts);
-	const [reviewerSuggestions] = useState(mockReviewerSuggestions);
+	const [prInsights, setPrInsights] = useState<GetPRInsightsResponse["pr_insights"]>([]);
+	const [staleAlerts, setStaleAlerts] = useState<StalePRAlert[]>([]);
+	const [reviewerSuggestions, setReviewerSuggestions] = useState<ReviewerSuggestion[]>([]);
 	const [filters, setFilters] = useState<Partial<GetPRInsightsRequest>>({});
 	const [selectedPR, setSelectedPR] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-	const handleRefreshData = async () => {
-		setIsLoading(true);
-		// Simulate API call
-		setTimeout(() => {
+	// Load data on mount
+	useEffect(() => {
+		loadPRInsights();
+	}, []);
+
+	const loadPRInsights = async () => {
+		try {
+			setIsLoading(true);
+			const response = await fetch("/api/prs");
+			if (!response.ok) {
+				throw new Error("Failed to fetch PR insights");
+			}
+			const data: GetPRInsightsResponse = await response.json();
+			setPrInsights(data.pr_insights || []);
+		} catch (error) {
+			console.error("Error loading PR insights:", error);
+			toast.error("Failed to load PR insights");
+		} finally {
 			setIsLoading(false);
-		}, 1000);
+			setIsInitialLoading(false);
+		}
 	};
 
-	const handleRequestReview = (githubLogin: string) => {
-		console.log(`Requesting review from ${githubLogin}`);
-		// In a real implementation, this would call the GitHub API
+	const handleRefreshData = async () => {
+		await loadPRInsights();
+		toast.success("PR insights refreshed");
+	};
+
+	const handleRequestReview = async (githubLogin: string) => {
+		try {
+			// In a real implementation, this would call the GitHub API
+			console.log(`Requesting review from ${githubLogin}`);
+			toast.success(`Review requested from ${githubLogin}`);
+		} catch (error) {
+			toast.error("Failed to request review");
+		}
 	};
 
 	const handleDismissAlert = (prId: string) => {
 		setStaleAlerts((alerts) =>
 			alerts.filter((alert) => alert.pr_insight.id !== prId)
 		);
+		toast.success("Alert dismissed");
 	};
 
 	const handleSnoozeAlert = (prId: string, hours: number) => {
 		console.log(`Snoozing alert for PR ${prId} for ${hours} hours`);
-		// In a real implementation, this would update the alert schedule
 		handleDismissAlert(prId);
+		toast.success(`Alert snoozed for ${hours} hours`);
 	};
 
 	const filteredPRs = prInsights.filter((pr) => {
 		if (filters.status && pr.status !== filters.status) return false;
-		if (filters.repo && pr.repo !== filters.repo) return false;
+		if (filters.repo && !pr.repo.includes(filters.repo)) return false;
 		if (
 			filters.author_member_id &&
 			pr.author_member_id !== filters.author_member_id
@@ -147,141 +89,116 @@ export default function PRRadarPage() {
 		return true;
 	});
 
-	return (
-		<div className="p-6 space-y-6">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight mb-2 flex items-center gap-3">
-						<Radar className="size-8 text-blue-500" />
-						PR Radar
-					</h1>
-					<p className="text-muted-foreground">
-						Pull request insights, scoring, and reviewer suggestions
-					</p>
+	if (isInitialLoading) {
+		return (
+			<div className="p-6">
+				<div className="flex items-center justify-between mb-6">
+					<div className="flex items-center gap-2">
+						<Radar className="h-8 w-8" />
+						<div>
+							<h1 className="text-3xl font-bold tracking-tight">PR Radar</h1>
+							<p className="text-muted-foreground">
+								Loading pull request insights...
+							</p>
+						</div>
+					</div>
 				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="p-6">
+			<div className="flex items-center justify-between mb-6">
 				<div className="flex items-center gap-2">
+					<Radar className="h-8 w-8" />
+					<div>
+						<h1 className="text-3xl font-bold tracking-tight">PR Radar</h1>
+						<p className="text-muted-foreground">
+							Monitor pull request health and get intelligent insights
+						</p>
+					</div>
+				</div>
+				<div className="flex gap-2">
 					<Button
 						variant="outline"
 						onClick={handleRefreshData}
 						disabled={isLoading}
 					>
 						<RefreshCw
-							className={`size-4 ${isLoading ? "animate-spin" : ""}`}
+							className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
 						/>
 						Refresh
+					</Button>
+					<Button>
+						<Plus className="mr-2 h-4 w-4" />
+						Add Repository
 					</Button>
 				</div>
 			</div>
 
-			{/* Stats Overview */}
-			<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-				<div className="bg-card rounded-lg border p-4">
-					<div className="text-2xl font-bold text-blue-600">
-						{prInsights.length}
-					</div>
-					<div className="text-sm text-muted-foreground">Total PRs</div>
-				</div>
-				<div className="bg-card rounded-lg border p-4">
-					<div className="text-2xl font-bold text-green-600">
-						{prInsights.filter((pr) => pr.status === "open").length}
-					</div>
-					<div className="text-sm text-muted-foreground">Open PRs</div>
-				</div>
-				<div className="bg-card rounded-lg border p-4">
-					<div className="text-2xl font-bold text-red-600">
-						{prInsights.filter((pr) => pr.risk_score >= 7).length}
-					</div>
-					<div className="text-sm text-muted-foreground">High Risk</div>
-				</div>
-				<div className="bg-card rounded-lg border p-4">
-					<div className="text-2xl font-bold text-yellow-600">
-						{staleAlerts.length}
-					</div>
-					<div className="text-sm text-muted-foreground">Stale PRs</div>
-				</div>
-			</div>
-
-			{/* Main Content Grid */}
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-				{/* Left Column - PR List and Filters */}
-				<div className="lg:col-span-2 space-y-6">
-					{/* Filters */}
+			<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+				{/* Filters */}
+				<div className="lg:col-span-1">
 					<PRFilters
 						filters={filters}
 						onFiltersChange={setFilters}
-						availableRepos={mockAvailableRepos}
-						availableAuthors={mockAvailableAuthors}
+						availableRepos={[...new Set(prInsights.map((pr) => pr.repo))]}
+						availableAuthors={prInsights
+							.filter((pr) => pr.author_member?.github_login)
+							.map((pr) => ({
+								id: pr.author_member_id || "",
+								github_login: pr.author_member?.github_login || "",
+							}))}
 					/>
-
-					{/* PR List */}
-					<div className="space-y-4">
-						<div className="flex items-center justify-between">
-							<h2 className="text-xl font-semibold">
-								Pull Requests ({filteredPRs.length})
-							</h2>
+					
+					{staleAlerts.length > 0 && (
+						<div className="mt-6">
+							<StaleAlerts
+								alerts={staleAlerts}
+								onDismiss={handleDismissAlert}
+								onSnooze={handleSnoozeAlert}
+							/>
 						</div>
-						{filteredPRs.length === 0 ? (
-							<div className="text-center py-12 text-muted-foreground">
-								<Radar className="size-12 mx-auto mb-4 opacity-50" />
-								<p>No pull requests match your filters</p>
-								<p className="text-sm">Try adjusting your search criteria</p>
-							</div>
-						) : (
-							<div className="space-y-4">
-								{filteredPRs.map((pr) => (
-									<PRScoreCard
-										key={pr.id}
-										prInsight={pr}
-										onViewDetails={() => setSelectedPR(pr.id)}
-									/>
-								))}
-							</div>
-						)}
-					</div>
+					)}
 				</div>
 
-				{/* Right Column - Alerts and Suggestions */}
-				<div className="space-y-6">
-					{/* Stale Alerts */}
-					<StaleAlerts
-						staleAlerts={staleAlerts}
-						isLoading={isLoading}
-						onRefresh={handleRefreshData}
-						onDismissAlert={handleDismissAlert}
-						onSnoozeAlert={handleSnoozeAlert}
-					/>
-
-					{/* Reviewer Suggestions */}
-					{selectedPR && (
-						<ReviewerSuggestions
-							suggestions={reviewerSuggestions}
-							onRequestReview={handleRequestReview}
-						/>
+				{/* Main Content */}
+				<div className="lg:col-span-3">
+					{filteredPRs.length === 0 ? (
+						<div className="text-center py-12">
+							<Radar className="mx-auto h-12 w-12 text-muted-foreground" />
+							<h3 className="mt-2 text-sm font-semibold">No pull requests</h3>
+							<p className="mt-1 text-sm text-muted-foreground">
+								{prInsights.length === 0
+									? "No PR data available. Make sure your GitHub integration is configured and you have PRs in your repositories."
+									: "No PRs match the current filters."}
+							</p>
+						</div>
+					) : (
+						<div className="space-y-4">
+							{filteredPRs.map((pr) => (
+								<PRScoreCard
+									key={pr.id}
+									pr={pr}
+									isSelected={selectedPR === pr.id}
+									onClick={() =>
+										setSelectedPR(selectedPR === pr.id ? null : pr.id)
+									}
+								/>
+							))}
+						</div>
 					)}
 
-					{/* Quick Actions */}
-					<div className="bg-card rounded-lg border p-4">
-						<h3 className="font-semibold mb-3">Quick Actions</h3>
-						<div className="space-y-2">
-							<Button
-								variant="outline"
-								size="sm"
-								className="w-full justify-start"
-							>
-								<Plus className="size-3" />
-								Create PR Template
-							</Button>
-							<Button
-								variant="outline"
-								size="sm"
-								className="w-full justify-start"
-							>
-								<RefreshCw className="size-3" />
-								Sync GitHub Data
-							</Button>
+					{/* Reviewer Suggestions */}
+					{reviewerSuggestions.length > 0 && (
+						<div className="mt-6">
+							<ReviewerSuggestions
+								suggestions={reviewerSuggestions}
+								onRequestReview={handleRequestReview}
+							/>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 		</div>

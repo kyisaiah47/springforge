@@ -85,6 +85,7 @@ export async function GET(request: NextRequest) {
 			.from("members")
 			.select("org_id")
 			.eq("email", user.email!)
+			.is("deleted_at", null)
 			.single();
 
 		if (memberError || !member) {
@@ -105,6 +106,7 @@ export async function GET(request: NextRequest) {
 				.from("members")
 				.select("org_id")
 				.eq("id", validatedParams.author_member_id)
+				.is("deleted_at", null)
 				.single();
 
 			if (targetMemberError || !targetMember) {
@@ -183,6 +185,7 @@ export async function POST(request: NextRequest) {
 			.from("members")
 			.select("org_id")
 			.eq("email", user.email!)
+			.is("deleted_at", null)
 			.single();
 
 		if (memberError || !member) {

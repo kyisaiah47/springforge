@@ -83,22 +83,22 @@ export const RETRO_COLUMNS: Record<
   went_well: {
     title: "What went well?",
     description: "Things that worked well during the sprint",
-    color: "bg-green-50 border-green-200",
+    color: "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800",
   },
   went_poorly: {
     title: "What could improve?",
     description: "Things that didn't go as planned",
-    color: "bg-red-50 border-red-200",
+    color: "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800",
   },
   ideas: {
     title: "Ideas & Suggestions",
     description: "New ideas and suggestions for improvement",
-    color: "bg-blue-50 border-blue-200",
+    color: "bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800",
   },
   action_items: {
     title: "Action Items",
     description: "Concrete actions to take in the next sprint",
-    color: "bg-yellow-50 border-yellow-200",
+    color: "bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800",
   },
 };
 
@@ -110,6 +110,6 @@ export const NOTE_COLORS = [
   "#f87171", // red
   "#a78bfa", // purple
   "#fb7185", // pink
-  "#fbbf24", // orange
+  "#fb923c", // orange
   "#6ee7b7", // emerald
 ];
