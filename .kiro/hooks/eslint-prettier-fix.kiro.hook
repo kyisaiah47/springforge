@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "name": "ESLint + Prettier Auto-fix",
+  "description": "Automatically runs ESLint and Prettier to fix code formatting and linting issues when files are saved",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx",
+      "scripts/**/*.ts",
+      "*.ts",
+      "*.tsx",
+      "*.js",
+      "*.jsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file has been saved. Please run ESLint with auto-fix enabled and then run Prettier to format the code. Use the following commands:\n\n1. Run ESLint with auto-fix: `npx eslint --fix {filePath}`\n2. Run Prettier to format: `npx prettier --write {filePath}`\n\nMake sure to handle any errors gracefully and report the results of both operations."
+  }
+}

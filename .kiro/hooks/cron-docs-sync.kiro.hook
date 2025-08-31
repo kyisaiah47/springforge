@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Cron Jobs Documentation Sync",
+  "description": "Automatically updates the cron jobs documentation when files in the cron API directory are modified, ensuring schedule and error handling information stays current",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/app/api/cron/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file in the cron API directory has been updated. Please analyze the cron job files in src/app/api/cron/ and update docs/cron-jobs.md with the current schedule configurations and error handling patterns. Include information about each cron job's purpose, schedule, and how errors are handled."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Database Schema Updater",
+  "description": "Automatically regenerates the Database Schema section of README.md when database migration files are modified",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "supabase/migrations/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A database migration file has been updated. Please regenerate the Database Schema section of README.md to reflect the current database structure. Review all migration files in supabase/migrations/ and update the documentation to accurately represent the current schema, including tables, relationships, and any recent changes."
+  }
+}

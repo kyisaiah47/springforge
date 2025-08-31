@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "name": "Vitest Fix Suggester",
+  "description": "Monitors vitest test output and suggests fixes for failing tests with code diffs when test runs fail",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
+      "vitest.config.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A vitest test run has failed. Please analyze the failing tests and suggest specific fixes for the failing code. Show a diff of the proposed changes to help debug and resolve the test failures. Focus on common issues like incorrect assertions, missing mocks, type errors, or logic bugs in the test or source code."
+  }
+}

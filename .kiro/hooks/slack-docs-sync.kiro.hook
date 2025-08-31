@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Slack Docs Sync",
+  "description": "Automatically updates docs/slack-messages.md with latest Block Kit examples when Slack formatter files change in lib/integrations/slack/",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/lib/integrations/slack*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The Slack formatter files in lib/integrations/slack/ have been modified. Please analyze the changes and update docs/slack-messages.md with the latest Block Kit examples, ensuring all message formats and components are properly documented with current usage patterns."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Arcade Documentation Sync",
+  "description": "Automatically updates docs/arcade.md with new challenge metadata and examples when arcade/levels/ files are modified",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "arcade/levels/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The arcade/levels/ directory has been modified. Please analyze the changed files and update docs/arcade.md with the latest challenge metadata, examples, and any new content. Make sure to maintain the existing documentation structure while incorporating the new or updated challenge information."
+  }
+}

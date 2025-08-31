@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Security Docs Updater",
+  "description": "Monitors changes to Next.js configuration and middleware files to automatically update security documentation with applied headers",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "next.config.ts",
+      "src/middleware.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The Next.js configuration (next.config.ts) or middleware (src/middleware.ts) has been updated. Please analyze these files to identify any security headers that are being applied (such as CSP, HSTS, X-Frame-Options, etc.) and update the docs/security.md file to reflect the current security header configuration. Include details about what headers are set, their values, and their security implications."
+  }
+}

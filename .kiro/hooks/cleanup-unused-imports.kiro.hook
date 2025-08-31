@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Cleanup Unused Imports",
+  "description": "When a file is deleted, scan the repository for unused imports or references and automatically remove them to keep the codebase clean.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file has been deleted from the repository. Please scan all TypeScript and JavaScript files in the src/ directory to identify any unused imports or references to the deleted file. Remove any import statements, require statements, or other references that are no longer needed. Focus on:\n\n1. Import statements that reference the deleted file\n2. Dynamic imports or require() calls\n3. Type imports and references\n4. Re-exports that reference the deleted file\n5. Any other references that would cause compilation errors\n\nProvide a summary of what was cleaned up and ensure the codebase remains functional after the cleanup."
+  }
+}

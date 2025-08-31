@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Vitest Test Runner",
+  "description": "Automatically runs vitest on saved .test.ts files and inserts a summary of any failing tests as a comment block at the bottom of the file",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.test.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A .test.ts file has been saved. Please run vitest on this specific file, capture the test results, and if there are any failing tests, insert a summary of the failures as a comment block at the bottom of the file. The comment should include the test names that failed and a brief description of why they failed. If all tests pass, you can optionally add a brief \"All tests passing\" comment or leave the file unchanged."
+  }
+}

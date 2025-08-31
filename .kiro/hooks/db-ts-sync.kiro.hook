@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Database TypeScript Sync",
+  "description": "Monitors database migration files and TypeScript database types for mismatches, proposing interface updates when schema changes are detected",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "supabase/migrations/*.sql",
+      "src/lib/types/database.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A database migration file or TypeScript database types file has been modified. Please analyze the changes and check for any mismatches between the database schema and TypeScript interfaces. If you find discrepancies, propose specific updates to the TypeScript interfaces in src/lib/types/database.ts to match the current database schema. Focus on:\n\n1. New tables or columns that need corresponding TypeScript types\n2. Modified column types that require interface updates\n3. Removed fields that should be cleaned up from interfaces\n4. Relationship changes that affect type definitions\n\nProvide concrete code suggestions for any needed interface updates."
+  }
+}

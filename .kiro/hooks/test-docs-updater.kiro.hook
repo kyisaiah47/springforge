@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Test Documentation Updater",
+  "description": "Automatically updates docs/testing.md with the name and purpose of new test files added under /tests directory",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "/tests/**/*.test.ts",
+      "/tests/**/*.test.tsx",
+      "/tests/**/*.spec.ts",
+      "/tests/**/*.spec.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A new test file has been added. Please analyze the test file and update docs/testing.md with:\n1. The test file name and path\n2. A brief description of what the test covers based on the test content\n3. Add it to the appropriate section in the testing documentation\n\nMake sure to maintain the existing structure and formatting of docs/testing.md."
+  }
+}

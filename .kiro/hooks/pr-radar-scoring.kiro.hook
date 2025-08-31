@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "PR Radar Scoring Update",
+  "description": "Automatically runs the PR risk scoring algorithm on modified test PRs and outputs updated scores when changes are made to the PR radar module",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "lib/modules/pr-radar/"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Changes have been detected in the PR radar module. Please run the PR risk scoring algorithm on any modified test PRs and provide updated risk scores. Focus on analyzing the impact of the code changes on scoring accuracy and output the new scores for affected PRs."
+  }
+}

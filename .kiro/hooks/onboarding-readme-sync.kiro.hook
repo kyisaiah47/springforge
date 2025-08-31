@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Onboarding README Sync",
+  "description": "Automatically refreshes the README quickstart section when onboarding flow files are updated to ensure documentation stays current with implementation changes",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/app/(modules)/onboarding/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The onboarding flow files have been updated. Please review the changes in src/app/(modules)/onboarding/ and update the quickstart section in README.md to reflect any new steps, requirements, or changes in the onboarding process. Ensure the documentation accurately represents the current implementation."
+  }
+}

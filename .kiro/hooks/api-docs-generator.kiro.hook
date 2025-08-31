@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "API Documentation Generator",
+  "description": "Automatically generates OpenAPI snippets and appends them to docs/api.md when new API files are created in the src/app/api/ directory",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/app/api/**/route.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A new API route file has been created at {filePath}. Please analyze the route handlers (GET, POST, PUT, DELETE, etc.) in this file and generate an appropriate OpenAPI specification snippet for each endpoint. Then append this documentation to the docs/api.md file. Include the HTTP method, path, parameters, request/response schemas, and a brief description based on the code implementation."
+  }
+}

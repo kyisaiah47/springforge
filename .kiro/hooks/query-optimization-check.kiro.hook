@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Query Optimization Check",
+  "description": "Monitors changes to database queries in the lib/modules/ directory and analyzes them for missing indexes and optimization opportunities",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/lib/modules/**/*.ts",
+      "src/lib/modules/**/*.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the modified files in lib/modules/ for database queries. Check for:\n1. Unindexed queries that could benefit from database indexes\n2. N+1 query problems\n3. Missing WHERE clause optimizations\n4. Inefficient JOIN operations\n5. Queries that could use database-level aggregations instead of application-level processing\n\nProvide specific recommendations for:\n- Database indexes to create\n- Query restructuring for better performance\n- Caching opportunities\n- Alternative query patterns\n\nFocus on Supabase/PostgreSQL optimization patterns and provide actionable suggestions with example SQL for index creation."
+  }
+}

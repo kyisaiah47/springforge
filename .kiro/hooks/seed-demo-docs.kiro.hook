@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Demo Seed Documentation",
+  "description": "Regenerates demo examples and updates docs/demo.md when the seed-demo.ts script is modified",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "scripts/seed-demo.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The scripts/seed-demo.ts file has been modified. Please regenerate the demo examples by running the seed script and then update the docs/demo.md file to reflect any changes in the demo data structure, examples, or usage instructions."
+  }
+}

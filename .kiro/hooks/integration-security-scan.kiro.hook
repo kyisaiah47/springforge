@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Integration Security Scanner",
+  "description": "Monitors integration files for unsafe token handling or missing signature validation and suggests secure fixes",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/lib/integrations/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the modified integration files for security vulnerabilities, specifically:\n\n1. **Token Security Issues:**\n   - Hardcoded API tokens or secrets\n   - Tokens logged in plain text\n   - Insecure token storage or transmission\n   - Missing token encryption or obfuscation\n   - Tokens exposed in error messages or responses\n\n2. **Signature Validation Issues:**\n   - Missing webhook signature verification\n   - Weak signature validation algorithms\n   - Improper HMAC implementation\n   - Missing timestamp validation to prevent replay attacks\n   - Inadequate signature comparison (timing attacks)\n\n3. **Authentication & Authorization:**\n   - Missing authentication checks\n   - Insufficient authorization validation\n   - Insecure credential handling\n   - Missing rate limiting or abuse protection\n\nFor each issue found, provide:\n- **Risk Level**: Critical/High/Medium/Low\n- **Specific Location**: File and line number\n- **Vulnerability Description**: What the security issue is\n- **Secure Fix**: Concrete code suggestions to resolve the issue\n- **Best Practice**: General security guidance for similar scenarios\n\nFocus on practical, actionable recommendations that align with the SprintForge codebase patterns and Next.js/Supabase architecture."
+  }
+}

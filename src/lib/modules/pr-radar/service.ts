@@ -329,7 +329,12 @@ export class PRRadarService {
 
 		let query = supabase
 			.from("pr_insights")
-			.select("*")
+			.select(
+				`
+				*,
+				author_member:members(github_login, avatar_url)
+			`
+			)
 			.eq("org_id", orgId)
 			.eq("status", "open")
 			.lt("updated_at", staleDate.toISOString());

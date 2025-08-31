@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "I18n Text Extraction",
+  "description": "Automatically extracts hardcoded text strings from React components in the components/ directory, adds them to locales/en.json, and updates component imports to use the localization system.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/components/**/*.tsx",
+      "src/components/**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file in the components/ directory has been modified. Please analyze the file for any hardcoded text strings that should be extracted for internationalization. Extract these strings into locales/en.json with appropriate keys, and update the component to import and use the localization system instead of hardcoded strings. Ensure the component imports the necessary i18n hooks or functions and replaces string literals with localized versions."
+  }
+}

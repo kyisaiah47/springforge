@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Retro Documentation Refresh",
+  "description": "Automatically refreshes documentation in docs/retro.md with new board states and export formats when retro module files are changed",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/lib/modules/retro/**/*",
+      "src/app/(modules)/retro/**/*",
+      "src/app/api/retro/**/*",
+      "src/components/modules/retro/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The retro module files have been updated. Please analyze the changes and refresh the documentation in docs/retro.md to include:\n\n1. Current board states and their data structures\n2. Available export formats and their schemas\n3. Any new features or API endpoints\n4. Updated usage examples and integration patterns\n\nFocus on documenting the technical aspects that would be useful for developers working with the retro module, including data models, API contracts, and component interfaces."
+  }
+}

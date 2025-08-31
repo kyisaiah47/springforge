@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "UI Accessibility Checker",
+  "description": "Automatically reviews UI components for accessibility compliance when saved, checking for proper ARIA labels, keyboard navigation support, and potential keyboard traps",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/components/ui/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A UI component has been saved. Please analyze the component for accessibility issues and provide specific suggestions:\n\n1. Check for missing or improper ARIA labels (aria-label, aria-labelledby, aria-describedby)\n2. Identify potential keyboard traps or missing keyboard navigation support\n3. Verify proper focus management and tab order\n4. Check for semantic HTML usage\n5. Identify missing alt text for images or icons\n6. Verify color contrast and visual accessibility considerations\n7. Check for proper role attributes where needed\n\nProvide specific, actionable fixes with code examples where possible. Focus on the most critical accessibility issues first."
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "name": "SprintForge Agent Hook",
+  "description": "Listens for file changes and automatically triggers Kiro to take follow-up actions for SprintForge development",
+  "triggers": [
+    {
+      "event": "file_save",
+      "paths": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx"
+      ],
+      "exclude": [
+        "**/__tests__/**",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "node_modules/**"
+      ]
+    },
+    {
+      "event": "file_create",
+      "paths": [
+        "src/components/**/*.tsx",
+        "src/app/**/*.tsx",
+        "src/lib/**/*.ts"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "prompt",
+      "description": "Update my documentation",
+      "prompt": "A file has been modified in the SprintForge codebase. Please review the changes and update relevant documentation files if needed. Focus on API documentation, component documentation, and README updates.",
+      "conditions": {
+        "file_patterns": [
+          "src/app/api/**/*.ts",
+          "src/components/**/*.tsx",
+          "src/lib/**/*.ts"
+        ]
+      }
+    },
+    {
+      "type": "prompt", 
+      "description": "Optimize my code",
+      "prompt": "Code changes detected in SprintForge. Please review for performance optimizations, security improvements, and code quality enhancements. Run type checking and suggest improvements.",
+      "conditions": {
+        "file_patterns": [
+          "src/**/*.ts",
+          "src/**/*.tsx"
+        ],
+        "exclude_patterns": [
+          "**/__tests__/**"
+        ]
+      }
+    },
+    {
+      "type": "prompt",
+      "description": "Language localization", 
+      "prompt": "New UI components or text content detected. Please check if internationalization support is needed and update language files accordingly for SprintForge's multi-language support.",
+      "conditions": {
+        "file_patterns": [
+          "src/components/**/*.tsx",
+          "src/app/**/page.tsx"
+        ]
+      }
+    }
+  ],
+  "settings": {
+    "debounce_ms": 2000,
+    "max_concurrent_actions": 2,
+    "retry_attempts": 3,
+    "log_level": "info"
+  }
+}
