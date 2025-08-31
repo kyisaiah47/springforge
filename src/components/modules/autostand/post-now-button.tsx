@@ -37,12 +37,12 @@ export function PostNowButton({
 		>
 			{isGenerating ? (
 				<>
-					<Loader2 className="size-4 animate-spin" />
+					<Loader2 className="size-4 animate-spin mr-2" />
 					Generating...
 				</>
 			) : (
 				<>
-					<Send className="size-4" />
+					<Send className="size-4 mr-2" />
 					Generate Standup
 				</>
 			)}

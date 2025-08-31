@@ -56,7 +56,7 @@ export function StickyNote({
 	return (
 		<div
 			className={cn(
-				"group relative rounded-lg border-2 p-3 shadow-sm transition-all hover:shadow-md",
+				"group relative rounded-lg border-2 p-3 shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02]",
 				"min-h-[120px] flex flex-col",
 				className
 			)}

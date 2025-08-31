@@ -76,7 +76,7 @@ export default function Home() {
 				<div className="text-center mb-16">
 					<div className="flex items-center justify-center mb-6">
 						<div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-							<span className="text-2xl font-bold">SF</span>
+							<span className="text-2xl font-bold">🚀</span>
 						</div>
 					</div>
 					<h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">

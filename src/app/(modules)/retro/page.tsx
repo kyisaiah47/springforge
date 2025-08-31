@@ -4,6 +4,16 @@ import { useState, useEffect } from "react";
 import { MessageSquare, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -25,6 +35,8 @@ export default function RetroPage() {
 	const [retros, setRetros] = useState<Retro[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isCreating, setIsCreating] = useState(false);
+	const [showCreateDialog, setShowCreateDialog] = useState(false);
+	const [formData, setFormData] = useState({ title: "", sprint: "" });
 	const router = useRouter();
 
 	useEffect(() => {
@@ -48,16 +60,14 @@ export default function RetroPage() {
 		}
 	};
 
-	const handleCreateRetro = async () => {
-		const title = prompt("Enter retrospective title:");
-		if (!title) return;
-
-		const sprint = prompt("Enter sprint name (optional):");
+	const handleCreateRetro = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!formData.title.trim()) return;
 		
 		try {
 			setIsCreating(true);
-			const createData: CreateRetroData = { title };
-			if (sprint) createData.sprint = sprint;
+			const createData: CreateRetroData = { title: formData.title.trim() };
+			if (formData.sprint.trim()) createData.sprint = formData.sprint.trim();
 
 			const response = await fetch("/api/retro", {
 				method: "POST",
@@ -74,6 +84,10 @@ export default function RetroPage() {
 			const newRetro = await response.json();
 			setRetros((prev) => [newRetro, ...prev]);
 			toast.success("Retrospective created successfully!");
+			
+			// Close dialog and reset form
+			setShowCreateDialog(false);
+			setFormData({ title: "", sprint: "" });
 			
 			// Navigate to the new retro
 			router.push(`/retro/${newRetro.id}`);
@@ -121,7 +135,7 @@ export default function RetroPage() {
 						<RefreshCw className="mr-2 h-4 w-4" />
 						Refresh
 					</Button>
-					<Button onClick={handleCreateRetro} disabled={isCreating}>
+					<Button onClick={() => setShowCreateDialog(true)} disabled={isCreating}>
 						<Plus className="mr-2 h-4 w-4" />
 						Create Retro
 					</Button>
@@ -135,7 +149,7 @@ export default function RetroPage() {
 					description="Create your first retrospective board to gather team feedback and improve your sprint process."
 					action={{
 						label: "Create Retrospective",
-						onClick: handleCreateRetro,
+						onClick: () => setShowCreateDialog(true),
 						disabled: isCreating,
 					}}
 					secondaryAction={{
@@ -178,6 +192,58 @@ export default function RetroPage() {
 					))}
 				</div>
 			)}
+
+			{/* Create Retro Dialog */}
+			<Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Create New Retrospective</DialogTitle>
+						<DialogDescription>
+							Set up a new retrospective session for your team.
+						</DialogDescription>
+					</DialogHeader>
+					<form onSubmit={handleCreateRetro}>
+						<div className="space-y-4">
+							<div>
+								<Label htmlFor="title">Title *</Label>
+								<Input
+									id="title"
+									value={formData.title}
+									onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+									placeholder="Enter retrospective title"
+									required
+									autoFocus
+								/>
+							</div>
+							<div>
+								<Label htmlFor="sprint">Sprint Name (optional)</Label>
+								<Input
+									id="sprint"
+									value={formData.sprint}
+									onChange={(e) => setFormData(prev => ({ ...prev, sprint: e.target.value }))}
+									placeholder="Sprint 1, Week 12, etc."
+								/>
+							</div>
+						</div>
+						<DialogFooter className="mt-6">
+							<Button
+								type="button"
+								variant="outline"
+								onClick={() => {
+									setShowCreateDialog(false);
+									setFormData({ title: "", sprint: "" });
+								}}
+								disabled={isCreating}
+							>
+								Cancel
+							</Button>
+							<Button type="submit" disabled={isCreating || !formData.title.trim()}>
+								{isCreating ? "Creating..." : "Create Retrospective"}
+							</Button>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

@@ -124,7 +124,6 @@ export function RetroBoard({
 				filter: `retro_id=eq.${retro.id}`,
 				callback: (payload) => {
 					// Note will be handled by parent component's state management
-					console.log("New retro note added:", payload.new);
 				},
 			},
 			{
@@ -132,7 +131,6 @@ export function RetroBoard({
 				event: "UPDATE",
 				filter: `retro_id=eq.${retro.id}`,
 				callback: (payload) => {
-					console.log("Retro note updated:", payload.new);
 				},
 			},
 			{
