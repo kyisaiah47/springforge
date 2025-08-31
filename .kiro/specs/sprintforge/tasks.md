@@ -123,7 +123,7 @@ d# Implementation Plan
   - Create note creation and editing with anonymous posting option
   - _Requirements: 4.1, 4.2, 4.3_
 
-- [ ] 16. Retro Arena Module - Export and Advanced Features 🟢
+- [x] 16. Retro Arena Module - Export and Advanced Features 🟢
 
   - Implement Markdown export functionality for retro results
   - Create Notion integration for retro export (feature flagged, stretch goal)
@@ -155,7 +155,7 @@ d# Implementation Plan
   - Create ChallengeCard for challenge selection
   - _Requirements: 5.1, 5.5_
 
-- [ ] 20. Real-time Features Integration 🟡
+- [-] 20. Real-time Features Integration 🟡
 
   - Implement RealtimeProvider for managing Supabase subscriptions
   - Create LiveUpdates component for displaying real-time changes

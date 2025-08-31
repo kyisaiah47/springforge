@@ -74,7 +74,7 @@ const initialNotes: RetroNoteWithAuthor[] = [
 		votes: 7,
 		is_anonymous: true,
 		created_at: new Date(Date.now() - 2400000).toISOString(),
-		author: null,
+		author: undefined,
 	},
 	{
 		id: "note-4",
@@ -129,7 +129,7 @@ export default function RetroDemoPage() {
 			is_anonymous: data.is_anonymous || false,
 			created_at: new Date().toISOString(),
 			author: data.is_anonymous
-				? null
+				? undefined
 				: {
 						id: currentUserId,
 						email: "alice@example.com",

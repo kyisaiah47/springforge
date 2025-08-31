@@ -27,6 +27,8 @@ export {
 	getRetroClientService,
 } from "./service";
 export { RetroRealtimeService, retroRealtimeService } from "./realtime";
+export { RetroExportService } from "./export-service";
+export type { ExportOptions, NotionExportOptions } from "./export-service";
 
 // Export hooks
 export { useRetro, useRetros } from "./hooks";

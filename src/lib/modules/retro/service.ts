@@ -14,6 +14,11 @@ import {
 	CreateRetroNoteRequest,
 	UpdateRetroNoteRequest,
 } from "./types";
+import {
+	RetroExportService,
+	ExportOptions,
+	NotionExportOptions,
+} from "./export-service";
 
 export class RetroService {
 	private supabase;
@@ -382,6 +387,50 @@ export class RetroService {
 		});
 
 		return stats;
+	}
+
+	// Export functionality
+	async exportRetroToMarkdown(
+		retroId: string,
+		options: ExportOptions = {}
+	): Promise<string> {
+		const retro = await this.getRetro(retroId);
+		if (!retro) {
+			throw new Error("Retro not found");
+		}
+
+		const notes = await this.getRetroNotes(retroId);
+		return RetroExportService.exportToMarkdown(retro, notes, options);
+	}
+
+	async exportRetroToNotion(
+		retroId: string,
+		notionToken: string,
+		options: NotionExportOptions = {}
+	): Promise<{ success: boolean; pageUrl?: string; error?: string }> {
+		const retro = await this.getRetro(retroId);
+		if (!retro) {
+			throw new Error("Retro not found");
+		}
+
+		const notes = await this.getRetroNotes(retroId);
+		return RetroExportService.exportToNotion(
+			retro,
+			notes,
+			notionToken,
+			options
+		);
+	}
+
+	async findDuplicateNotes(
+		retroId: string,
+		similarityThreshold: number = 0.8
+	): Promise<{
+		mergedNotes: RetroNoteWithAuthor[];
+		duplicateGroups: RetroNoteWithAuthor[][];
+	}> {
+		const notes = await this.getRetroNotes(retroId);
+		return RetroExportService.mergeDuplicateNotes(notes, similarityThreshold);
 	}
 }
 

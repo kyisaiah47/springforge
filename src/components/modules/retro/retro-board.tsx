@@ -14,6 +14,7 @@ import {
 } from "@/lib/modules/retro/types";
 import { StickyNote } from "./sticky-note";
 import { NoteCreator } from "./note-creator";
+import { ExportDialog, MergeDuplicatesDialog } from "./export-dialog";
 
 interface RetroBoardProps {
 	retro: RetroWithDetails;
@@ -128,6 +129,22 @@ export function RetroBoard({
 					<div className="text-sm text-muted-foreground">
 						{totalNotes} notes • {totalVotes} votes
 					</div>
+
+					{/* Export and Advanced Features */}
+					{retro.status === "completed" && (
+						<div className="flex gap-2">
+							<ExportDialog
+								retroId={retro.id}
+								retroTitle={retro.title}
+							/>
+							{currentUserId === retro.created_by && (
+								<MergeDuplicatesDialog
+									retroId={retro.id}
+									onMergeComplete={() => window.location.reload()}
+								/>
+							)}
+						</div>
+					)}
 				</div>
 			</div>
 
