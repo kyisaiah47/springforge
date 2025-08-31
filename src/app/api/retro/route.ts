@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { retroService } from "@/lib/modules/retro";
+import { createRetroService } from "@/lib/modules/retro";
 import { createAPIError } from "@/lib/shared/api-error";
 import { logger, withMonitoring, generateRequestId } from "@/lib/monitoring";
 
@@ -87,6 +87,7 @@ export const GET = withMonitoring(async function GET(request: NextRequest) {
 		}
 
 		// Get retros
+		const retroService = createRetroService(supabase);
 		const result = await retroService.getRetros(member.org_id, validatedParams);
 
 		logger.info("Retros retrieved successfully", {
@@ -164,6 +165,7 @@ export const POST = withMonitoring(async function POST(request: NextRequest) {
 		const validatedData = createRetroSchema.parse(body);
 
 		// Create retro
+		const retroService = createRetroService(supabase);
 		const retro = await retroService.createRetro(
 			member.org_id,
 			member.id,

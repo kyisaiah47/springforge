@@ -1,72 +1,77 @@
-# Project Structure
+# SprintForge Structure Overview
 
-SprintForge follows Next.js App Router conventions with a modular architecture for scalability and maintainability.
+**Mission:** Maintain a clean, modular Next.js 14+ codebase that makes it easy to demo, extend, and onboard contributors quickly.
 
 ## Root Structure
 
 ```
 ├── src/                    # Source code
-├── supabase/              # Database migrations and schema
-├── scripts/               # Database and utility scripts
-├── public/                # Static assets
-└── .kiro/                 # Kiro configuration and steering
+├── supabase/               # Database migrations and schema
+├── scripts/                # Utility and seed scripts
+├── public/                 # Static assets
+└── .kiro/                  # Kiro configuration and steering
 ```
 
 ## Source Organization (`src/`)
 
 ### App Directory (`src/app/`)
 
-- **App Router**: Next.js 13+ routing with nested layouts
-- **Route Groups**: `(modules)` for feature organization
-- **API Routes**: RESTful endpoints in `api/` directory
-- **Auth Flow**: Dedicated auth pages and callbacks
+- **App Router**: Next.js 13+ routing with nested layouts.
+- **Route Groups**: `(modules)` for feature organization.
+- **API Routes**: RESTful endpoints in `api/`.
+- **Auth Flow**: Dedicated auth pages and OAuth callbacks.
 
 ### Components (`src/components/`)
 
-- **UI Components**: Reusable design system components in `ui/`
-- **Module Components**: Feature-specific components in `modules/`
-- **Shared Components**: Cross-module reusable components
+- **UI Components**: Reusable design system components in `ui/`.
+- **Module Components**: Feature-specific components in `modules/`.
+- **Shared Components**: Cross-module reusable building blocks.
 
 ### Library (`src/lib/`)
 
-- **Auth**: Authentication providers and route protection
-- **Supabase**: Database client configuration (client/server)
-- **Modules**: Business logic organized by feature
-- **Types**: TypeScript definitions and database types
-- **Utils**: Shared utility functions
+- **Auth**: Providers + `ProtectedRoute`.
+- **Supabase**: Client + server configs.
+- **Modules**: Business logic by feature.
+- **Types**: TypeScript + DB types.
+- **Utils**: Shared helpers.
 
 ## Module Architecture
 
-Each module follows a consistent pattern:
+Each feature module (AutoStand, PR Radar, Retro, Arcade) follows a consistent pattern:
 
-- **App Routes**: `src/app/(modules)/{module}/`
-- **API Routes**: `src/app/api/{module}/`
-- **Components**: `src/components/modules/{module}/`
-- **Business Logic**: `src/lib/modules/{module}/`
+- **App Routes** → `src/app/(modules)/{module}/`
+- **API Routes** → `src/app/api/{module}/`
+- **Components** → `src/components/modules/{module}/`
+- **Logic** → `src/lib/modules/{module}/`
 
-## Database Structure (`supabase/`)
+This enforces **separation of concerns** and makes each module demo-ready in isolation.
 
-- **Migrations**: Numbered SQL files for schema changes
-- **001_initial_schema.sql**: Core tables and relationships
-- **002_rls_policies.sql**: Row Level Security policies
+## Database (`supabase/`)
+
+- **Migrations**: Numbered SQL files.
+- **001_initial_schema.sql**: Core tables + relationships.
+- **002_rls_policies.sql**: RLS policies.
 
 ## Naming Conventions
 
-- **Files**: kebab-case for all files and directories
-- **Components**: PascalCase for React components
-- **Functions**: camelCase for functions and variables
-- **Database**: snake_case for tables and columns
-- **Routes**: lowercase with hyphens for URL segments
+- Files → `kebab-case`
+- Components → `PascalCase`
+- Functions → `camelCase`
+- DB → `snake_case`
+- Routes → lowercase + hyphens
 
 ## Import Patterns
 
-- Use `@/` alias for src imports: `import { Component } from '@/components/ui/button'`
-- Relative imports for same-directory files
-- Absolute imports for cross-module dependencies
+- Use `@/` alias for imports:
+  ```ts
+  import { Button } from "@/components/ui/button";
+  ```
+- Relative imports only for same-directory.
+- Absolute imports for cross-module dependencies.
 
 ## Authentication Flow
 
-- **Protected Routes**: Wrap with `ProtectedRoute` component
-- **Auth Provider**: Global context in root layout
-- **Server Components**: Use `src/lib/supabase/server.ts`
-- **Client Components**: Use `src/lib/supabase/client.ts`
+- **Protected Routes** wrapped with `ProtectedRoute`.
+- **AuthProvider** in root layout for global context.
+- **Server Components**: `src/lib/supabase/server.ts`.
+- **Client Components**: `src/lib/supabase/client.ts`.

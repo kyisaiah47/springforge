@@ -5,115 +5,25 @@ import { createRetroService } from "@/lib/modules/retro";
 import { createAPIError } from "@/lib/shared/api-error";
 import { logger, withMonitoring, generateRequestId } from "@/lib/monitoring";
 
-const updateRetroSchema = z.object({
-	title: z.string().min(1).max(200).optional(),
-	sprint: z.string().max(100).optional(),
-	status: z
-		.enum(["planning", "active", "voting", "completed", "archived"])
+const updateNoteSchema = z.object({
+	text: z.string().min(1).max(500).optional(),
+	color: z
+		.string()
+		.regex(/^#[0-9a-fA-F]{6}$/)
 		.optional(),
 });
 
-export const GET = withMonitoring(async function GET(
-	request: NextRequest,
-	{ params }: { params: Promise<{ id: string }> }
-) {
-	const { id } = await params;
-	const requestId = generateRequestId();
-	logger.info("GET /api/retro/[id]", { requestId, retroId: id });
-
-	try {
-		const supabase = await createClient();
-
-		// Check authentication
-		const {
-			data: { user },
-			error: authError,
-		} = await supabase.auth.getUser();
-
-		if (authError || !user) {
-			return NextResponse.json(
-				createAPIError("UNAUTHORIZED", "Authentication required"),
-				{ status: 401 }
-			);
-		}
-
-		// Get user's organization
-		const { data: member, error: memberError } = await supabase
-			.from("members")
-			.select("org_id")
-			.eq("email", user.email!)
-			.single();
-
-		if (memberError || !member) {
-			return NextResponse.json(
-				createAPIError("FORBIDDEN", "User not found in any organization"),
-				{ status: 403 }
-			);
-		}
-
-		// Get retro and verify organization access
-		const retroService = createRetroService(supabase);
-		const retro = await retroService.getRetro(id);
-
-		if (!retro) {
-			return NextResponse.json(createAPIError("NOT_FOUND", "Retro not found"), {
-				status: 404,
-			});
-		}
-
-		if (retro.org_id !== member.org_id) {
-			return NextResponse.json(
-				createAPIError(
-					"FORBIDDEN",
-					"Cannot access retro from different organization"
-				),
-				{ status: 403 }
-			);
-		}
-
-		// Get retro notes
-		const notes = await retroService.getRetroNotes(id);
-		const stats = await retroService.getRetroStats(id);
-
-		const result = {
-			...retro,
-			notes,
-			stats,
-		};
-
-		logger.info("Retro retrieved successfully", {
-			requestId,
-			retroId: id,
-			orgId: member.org_id,
-		});
-		return NextResponse.json(result);
-	} catch (error) {
-		logger.error("Get retro error", error as Error, { requestId, retroId: id });
-
-		if (error instanceof Error) {
-			return NextResponse.json(
-				createAPIError("INTERNAL_ERROR", error.message),
-				{
-					status: 500,
-				}
-			);
-		}
-
-		return NextResponse.json(
-			createAPIError("INTERNAL_ERROR", "An unexpected error occurred"),
-			{ status: 500 }
-		);
-	}
-},
-"GET /api/retro/[id]");
-
 export const PUT = withMonitoring(async function PUT(
 	request: NextRequest,
-	{ params }: { params: Promise<{ id: string }> }
+	{ params }: { params: Promise<{ id: string; noteId: string }> }
 ) {
-	const { id } = await params;
+	const { id, noteId } = await params;
 	const requestId = generateRequestId();
-	logger.info("PUT /api/retro/[id]", { requestId, retroId: id });
+	logger.info("PUT /api/retro/[id]/notes/[noteId]", {
+		requestId,
+		retroId: id,
+		noteId,
+	});
 
 	try {
 		const supabase = await createClient();
@@ -147,15 +57,15 @@ export const PUT = withMonitoring(async function PUT(
 
 		// Verify retro exists and user has access
 		const retroService = createRetroService(supabase);
-		const existingRetro = await retroService.getRetro(id);
+		const retro = await retroService.getRetro(id);
 
-		if (!existingRetro) {
+		if (!retro) {
 			return NextResponse.json(createAPIError("NOT_FOUND", "Retro not found"), {
 				status: 404,
 			});
 		}
 
-		if (existingRetro.org_id !== member.org_id) {
+		if (retro.org_id !== member.org_id) {
 			return NextResponse.json(
 				createAPIError(
 					"FORBIDDEN",
@@ -165,23 +75,70 @@ export const PUT = withMonitoring(async function PUT(
 			);
 		}
 
+		// Get the note to verify ownership
+		const { data: existingNote, error: noteError } = await supabase
+			.from("retro_notes")
+			.select("author_member_id, retro_id")
+			.eq("id", noteId)
+			.single();
+
+		if (noteError || !existingNote) {
+			return NextResponse.json(createAPIError("NOT_FOUND", "Note not found"), {
+				status: 404,
+			});
+		}
+
+		if (existingNote.retro_id !== id) {
+			return NextResponse.json(
+				createAPIError("FORBIDDEN", "Note does not belong to this retro"),
+				{ status: 403 }
+			);
+		}
+
+		// Only allow author to edit their own notes (unless anonymous)
+		if (
+			existingNote.author_member_id &&
+			existingNote.author_member_id !== member.id
+		) {
+			return NextResponse.json(
+				createAPIError("FORBIDDEN", "Can only edit your own notes"),
+				{ status: 403 }
+			);
+		}
+
+		// Check if retro is in a state that allows editing notes
+		if (retro.status === "completed" || retro.status === "archived") {
+			return NextResponse.json(
+				createAPIError(
+					"FORBIDDEN",
+					"Cannot edit notes in completed or archived retro"
+				),
+				{ status: 403 }
+			);
+		}
+
 		// Parse and validate request body
 		const body = await request.json();
-		const validatedData = updateRetroSchema.parse(body);
+		const validatedData = updateNoteSchema.parse(body);
 
-		// Update retro
-		const updatedRetro = await retroService.updateRetro(id, validatedData);
+		// Update note
+		const updatedNote = await retroService.updateRetroNote(
+			noteId,
+			validatedData
+		);
 
-		logger.info("Retro updated successfully", {
+		logger.info("Retro note updated successfully", {
 			requestId,
 			retroId: id,
+			noteId,
 			orgId: member.org_id,
 		});
-		return NextResponse.json(updatedRetro);
+		return NextResponse.json(updatedNote);
 	} catch (error) {
-		logger.error("Update retro error", error as Error, {
+		logger.error("Update retro note error", error as Error, {
 			requestId,
 			retroId: id,
+			noteId,
 		});
 
 		if (error instanceof z.ZodError) {
@@ -210,15 +167,19 @@ export const PUT = withMonitoring(async function PUT(
 		);
 	}
 },
-"PUT /api/retro/[id]");
+"PUT /api/retro/[id]/notes/[noteId]");
 
 export const DELETE = withMonitoring(async function DELETE(
 	request: NextRequest,
-	{ params }: { params: Promise<{ id: string }> }
+	{ params }: { params: Promise<{ id: string; noteId: string }> }
 ) {
-	const { id } = await params;
+	const { id, noteId } = await params;
 	const requestId = generateRequestId();
-	logger.info("DELETE /api/retro/[id]", { requestId, retroId: id });
+	logger.info("DELETE /api/retro/[id]/notes/[noteId]", {
+		requestId,
+		retroId: id,
+		noteId,
+	});
 
 	try {
 		const supabase = await createClient();
@@ -252,15 +213,15 @@ export const DELETE = withMonitoring(async function DELETE(
 
 		// Verify retro exists and user has access
 		const retroService = createRetroService(supabase);
-		const existingRetro = await retroService.getRetro(id);
+		const retro = await retroService.getRetro(id);
 
-		if (!existingRetro) {
+		if (!retro) {
 			return NextResponse.json(createAPIError("NOT_FOUND", "Retro not found"), {
 				status: 404,
 			});
 		}
 
-		if (existingRetro.org_id !== member.org_id) {
+		if (retro.org_id !== member.org_id) {
 			return NextResponse.json(
 				createAPIError(
 					"FORBIDDEN",
@@ -270,30 +231,66 @@ export const DELETE = withMonitoring(async function DELETE(
 			);
 		}
 
-		// Only allow creator or admin to delete
-		if (existingRetro.created_by !== member.id && member.role !== "admin") {
+		// Get the note to verify ownership
+		const { data: existingNote, error: noteError } = await supabase
+			.from("retro_notes")
+			.select("author_member_id, retro_id")
+			.eq("id", noteId)
+			.single();
+
+		if (noteError || !existingNote) {
+			return NextResponse.json(createAPIError("NOT_FOUND", "Note not found"), {
+				status: 404,
+			});
+		}
+
+		if (existingNote.retro_id !== id) {
+			return NextResponse.json(
+				createAPIError("FORBIDDEN", "Note does not belong to this retro"),
+				{ status: 403 }
+			);
+		}
+
+		// Only allow author or admin to delete notes
+		if (
+			existingNote.author_member_id !== member.id &&
+			member.role !== "admin"
+		) {
 			return NextResponse.json(
 				createAPIError(
 					"FORBIDDEN",
-					"Only retro creator or admin can delete retro"
+					"Can only delete your own notes or admin can delete any"
 				),
 				{ status: 403 }
 			);
 		}
 
-		// Delete retro
-		await retroService.deleteRetro(id);
+		// Check if retro is in a state that allows deleting notes
+		if (retro.status === "completed" || retro.status === "archived") {
+			return NextResponse.json(
+				createAPIError(
+					"FORBIDDEN",
+					"Cannot delete notes in completed or archived retro"
+				),
+				{ status: 403 }
+			);
+		}
 
-		logger.info("Retro deleted successfully", {
+		// Delete note
+		await retroService.deleteRetroNote(noteId);
+
+		logger.info("Retro note deleted successfully", {
 			requestId,
 			retroId: id,
+			noteId,
 			orgId: member.org_id,
 		});
 		return NextResponse.json({ success: true });
 	} catch (error) {
-		logger.error("Delete retro error", error as Error, {
+		logger.error("Delete retro note error", error as Error, {
 			requestId,
 			retroId: id,
+			noteId,
 		});
 
 		if (error instanceof Error) {
@@ -311,4 +308,4 @@ export const DELETE = withMonitoring(async function DELETE(
 		);
 	}
 },
-"DELETE /api/retro/[id]");
+"DELETE /api/retro/[id]/notes/[noteId]");

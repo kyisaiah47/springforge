@@ -1,4 +1,3 @@
-import { createClient } from "@/lib/supabase/server";
 import { createClient as createClientClient } from "@/lib/supabase/client";
 import {
 	Retro,
@@ -19,8 +18,8 @@ import {
 export class RetroService {
 	private supabase;
 
-	constructor(isClient = false) {
-		this.supabase = isClient ? createClientClient() : createClient();
+	constructor(supabaseClient?: any) {
+		this.supabase = supabaseClient || createClientClient();
 	}
 
 	// Retro CRUD operations
@@ -386,6 +385,16 @@ export class RetroService {
 	}
 }
 
-// Export singleton instances
-export const retroService = new RetroService();
-export const retroClientService = new RetroService(true);
+// Factory function for server-side usage
+export function createRetroService(supabaseClient?: any) {
+	return new RetroService(supabaseClient);
+}
+
+// Lazy singleton for client-side usage
+let _retroClientService: RetroService | null = null;
+export function getRetroClientService(): RetroService {
+	if (!_retroClientService) {
+		_retroClientService = new RetroService();
+	}
+	return _retroClientService;
+}

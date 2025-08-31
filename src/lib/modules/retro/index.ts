@@ -21,5 +21,12 @@ export type {
 export { RETRO_COLUMNS, NOTE_COLORS } from "./types";
 
 // Export services
-export { RetroService, retroService, retroClientService } from "./service";
+export {
+	RetroService,
+	createRetroService,
+	getRetroClientService,
+} from "./service";
 export { RetroRealtimeService, retroRealtimeService } from "./realtime";
+
+// Export hooks
+export { useRetro, useRetros } from "./hooks";
