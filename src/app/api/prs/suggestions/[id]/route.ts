@@ -11,8 +11,9 @@ const getReviewerSuggestionsSchema = z.object({
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: { id: string } }
+	{ params }: { params: Promise<{ id: string }> }
 ) {
+	const { id } = await params;
 	try {
 		const supabase = await createClient();
 
@@ -45,10 +46,7 @@ export async function GET(
 
 		// Get PR insight to verify access and get data
 		const prRadarService = createPRRadarService();
-		const prInsight = await prRadarService.getPRInsightById(
-			member.org_id,
-			params.id
-		);
+		const prInsight = await prRadarService.getPRInsightById(member.org_id, id);
 
 		// Parse query parameters
 		const { searchParams } = new URL(request.url);

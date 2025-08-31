@@ -5,8 +5,9 @@ import { createAPIError } from "@/lib/shared/api-error";
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: { id: string } }
+	{ params }: { params: Promise<{ id: string }> }
 ) {
+	const { id } = await params;
 	try {
 		const supabase = await createClient();
 
@@ -39,10 +40,7 @@ export async function GET(
 
 		// Get standup by ID
 		const autoStandService = createAutoStandService();
-		const standup = await autoStandService.getStandupById(
-			member.org_id,
-			params.id
-		);
+		const standup = await autoStandService.getStandupById(member.org_id, id);
 
 		return NextResponse.json({ standup });
 	} catch (error) {

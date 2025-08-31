@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Plus, Users, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
 	StandupHistory,
 	PostNowButton,
@@ -194,23 +195,20 @@ export default function StandupsPage() {
 					{recentActivity ? (
 						<ActivityTimeline activity={recentActivity} />
 					) : (
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2">
-									<Activity className="size-5" />
-									Recent Activity
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="text-center py-8 text-muted-foreground">
-									<Activity className="size-8 mx-auto mb-2 opacity-50" />
-									<p className="mb-2">No recent activity</p>
-									<p className="text-sm">
-										Generate a standup to see your GitHub activity
-									</p>
-								</div>
-							</CardContent>
-						</Card>
+						<EmptyState
+							icon={<Activity className="size-6 text-muted-foreground" />}
+							title="No Recent Activity"
+							description="Generate a standup to see your GitHub activity and team insights."
+							action={{
+								label: "Generate Standup",
+								onClick: handleGenerateStandup,
+							}}
+							secondaryAction={{
+								label: "Load Demo Data",
+								onClick: () => (window.location.href = "/dashboard"),
+								variant: "outline",
+							}}
+						/>
 					)}
 				</div>
 

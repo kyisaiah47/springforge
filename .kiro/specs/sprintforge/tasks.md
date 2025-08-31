@@ -91,7 +91,7 @@ d# Implementation Plan
   - Write integration tests for webhook processing and data storage
   - _Requirements: 3.1, 3.6_
 
-- [-] 12. PR Radar Module - UI Components 🔴
+- [x] 12. PR Radar Module - UI Components 🔴
 
   - Create PRScoreCard component with risk visualization
   - Build ReviewerSuggestions component with reasoning display
@@ -171,7 +171,7 @@ d# Implementation Plan
   - Create feature flag management interface (stretch goal)
   - _Requirements: 1.3, 1.4, 7.6_
 
-- [ ] 22. Onboarding and Demo Data 🔴
+- [-] 22. Onboarding and Demo Data 🔴
 
   - Create onboarding flow for new users and organizations
   - Implement demo data seeding scripts for all modules

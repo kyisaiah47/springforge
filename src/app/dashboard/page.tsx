@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/auth/auth-provider";
+import { useOnboarding } from "@/lib/onboarding/onboarding-provider";
 import {
 	Card,
 	CardContent,
@@ -8,12 +9,35 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Users, GitPullRequest, MessageSquare, Gamepad2 } from "lucide-react";
+import {
+	Users,
+	GitPullRequest,
+	MessageSquare,
+	Gamepad2,
+	Play,
+	HelpCircle,
+} from "lucide-react";
+import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
+import {
+	GuidedTour,
+	defaultTourSteps,
+} from "@/components/onboarding/guided-tour";
 import Link from "next/link";
 
 export default function DashboardPage() {
 	const { user } = useAuth();
+	const {
+		showOnboardingFlow,
+		showGuidedTour,
+		hasCompletedOnboarding,
+		completeOnboarding,
+		closeOnboardingFlow,
+		closeGuidedTour,
+		startGuidedTour,
+		markDemoDataSeeded,
+	} = useOnboarding();
 
 	const modules = [
 		{
@@ -58,6 +82,13 @@ export default function DashboardPage() {
 			.toUpperCase()
 			.slice(0, 2) || "U";
 
+	const handleOnboardingComplete = () => {
+		completeOnboarding();
+		markDemoDataSeeded();
+		// Optionally start the guided tour after onboarding
+		setTimeout(() => startGuidedTour(), 500);
+	};
+
 	return (
 		<div className="p-6 space-y-6">
 			<div className="flex items-center justify-between">
@@ -69,6 +100,16 @@ export default function DashboardPage() {
 						Your all-in-one developer productivity suite
 					</p>
 				</div>
+				{hasCompletedOnboarding && (
+					<Button
+						variant="outline"
+						onClick={startGuidedTour}
+						className="flex items-center gap-2"
+					>
+						<HelpCircle className="h-4 w-4" />
+						Take Tour
+					</Button>
+				)}
 			</div>
 
 			<Card>
