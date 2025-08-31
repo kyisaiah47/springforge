@@ -4,11 +4,15 @@ import { z } from "zod";
  * Common validation schemas used across API endpoints
  */
 
-// Base pagination schema
+// Base pagination schema with enhanced validation
 export const paginationSchema = z.object({
 	limit: z.coerce.number().min(1).max(100).default(20),
-	cursor: z.string().optional(),
-	order_by: z.string().optional(),
+	cursor: z.string().max(255).optional(),
+	order_by: z
+		.string()
+		.max(50)
+		.regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
+		.optional(),
 	order_dir: z.enum(["asc", "desc"]).default("desc"),
 });
 
@@ -18,9 +22,21 @@ export const dateRangeSchema = z.object({
 	date_to: z.string().datetime().optional(),
 });
 
-// Organization and member schemas
-export const orgIdSchema = z.string().uuid();
-export const memberIdSchema = z.string().uuid();
+// Organization and member schemas with enhanced validation
+export const orgIdSchema = z.string().uuid("Invalid organization ID format");
+export const memberIdSchema = z.string().uuid("Invalid member ID format");
+
+// Common string validation schemas
+export const safeStringSchema = z
+	.string()
+	.max(1000)
+	.refine(
+		(val) => !/<script|javascript:|on\w+=/i.test(val),
+		"Invalid characters detected"
+	);
+
+export const urlSchema = z.string().url().max(2048);
+export const emailSchema = z.string().email().max(254);
 
 /**
  * AutoStand module validation schemas

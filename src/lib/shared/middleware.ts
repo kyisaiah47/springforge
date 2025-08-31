@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { APIErrors, APIErrorException } from "./api-error";
 import { validateRequestBody, validateQueryParams } from "./validation";
+import { logger } from "../monitoring/logger";
+import {
+	securityAuditor,
+	logAuthFailure,
+	logRateLimitViolation,
+	logSuspiciousActivity,
+} from "../monitoring/security-audit";
 import { z } from "zod";
 
 /**
@@ -26,6 +33,8 @@ const DEFAULT_RATE_LIMITS: Record<string, RateLimitConfig> = {
 	api: { windowMs: 60 * 1000, maxRequests: 100 }, // 100 requests per minute
 	webhook: { windowMs: 60 * 1000, maxRequests: 1000 }, // 1000 requests per minute
 	cron: { windowMs: 60 * 1000, maxRequests: 10 }, // 10 requests per minute
+	strict: { windowMs: 60 * 1000, maxRequests: 20 }, // 20 requests per minute for sensitive endpoints
+	public: { windowMs: 60 * 1000, maxRequests: 200 }, // 200 requests per minute for public endpoints
 };
 
 /**
@@ -67,6 +76,9 @@ interface MiddlewareOptions {
 	rateLimit?: RateLimitConfig | keyof typeof DEFAULT_RATE_LIMITS;
 	validateBody?: z.ZodSchema;
 	validateQuery?: z.ZodSchema;
+	allowedMethods?: string[];
+	requireHTTPS?: boolean;
+	logRequests?: boolean;
 }
 
 /**
@@ -117,6 +129,12 @@ function applyRateLimit(req: NextRequest, config: RateLimitConfig): void {
 	} else {
 		// Existing window
 		if (current.count >= config.maxRequests) {
+			logRateLimitViolation(key, req.nextUrl.pathname, {
+				current_count: current.count,
+				max_requests: config.maxRequests,
+				window_ms: config.windowMs,
+			});
+
 			throw APIErrors.rateLimited(
 				`Rate limit exceeded. Try again in ${Math.ceil(
 					(current.resetTime - now) / 1000
@@ -146,6 +164,111 @@ function getClientIP(req: NextRequest): string {
 }
 
 /**
+ * Sanitize input to prevent XSS and injection attacks
+ */
+function sanitizeInput(input: any): any {
+	if (typeof input === "string") {
+		// Remove potentially dangerous characters and patterns
+		return input
+			.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+			.replace(/javascript:/gi, "")
+			.replace(/on\w+\s*=/gi, "")
+			.replace(/data:text\/html/gi, "")
+			.trim();
+	}
+
+	if (Array.isArray(input)) {
+		return input.map(sanitizeInput);
+	}
+
+	if (input && typeof input === "object") {
+		const sanitized: any = {};
+		for (const [key, value] of Object.entries(input)) {
+			sanitized[key] = sanitizeInput(value);
+		}
+		return sanitized;
+	}
+
+	return input;
+}
+
+/**
+ * Validate request method
+ */
+function validateMethod(req: NextRequest, allowedMethods?: string[]): void {
+	if (allowedMethods && !allowedMethods.includes(req.method)) {
+		throw new APIErrorException(
+			"METHOD_NOT_ALLOWED",
+			`Method ${req.method} not allowed. Allowed methods: ${allowedMethods.join(
+				", "
+			)}`,
+			405
+		);
+	}
+}
+
+/**
+ * Validate HTTPS requirement
+ */
+function validateHTTPS(req: NextRequest): void {
+	const protocol = req.headers.get("x-forwarded-proto") || "http";
+	if (process.env.NODE_ENV === "production" && protocol !== "https") {
+		throw new APIErrorException(
+			"HTTPS_REQUIRED",
+			"HTTPS is required for this endpoint",
+			400
+		);
+	}
+}
+
+/**
+ * Detect suspicious request patterns
+ */
+function detectSuspiciousActivity(req: NextRequest): void {
+	const userAgent = req.headers.get("user-agent") || "";
+	const referer = req.headers.get("referer") || "";
+
+	// Check for common bot patterns
+	const suspiciousPatterns = [
+		/sqlmap/i,
+		/nikto/i,
+		/nessus/i,
+		/burp/i,
+		/nmap/i,
+		/masscan/i,
+	];
+
+	if (suspiciousPatterns.some((pattern) => pattern.test(userAgent))) {
+		const ip = getClientIP(req);
+		logSuspiciousActivity(ip, "suspicious_user_agent", {
+			userAgent,
+			url: req.url,
+		});
+
+		throw new APIErrorException(
+			"SUSPICIOUS_ACTIVITY",
+			"Request blocked due to suspicious activity",
+			403
+		);
+	}
+
+	// Check for path traversal attempts
+	const url = req.nextUrl.pathname;
+	if (url.includes("../") || url.includes("..\\") || url.includes("%2e%2e")) {
+		const ip = getClientIP(req);
+		logSuspiciousActivity(ip, "path_traversal_attempt", {
+			url,
+		});
+
+		throw new APIErrorException(
+			"PATH_TRAVERSAL_ATTEMPT",
+			"Invalid path detected",
+			400
+		);
+	}
+}
+
+/**
  * Authentication middleware
  */
 async function authenticateRequest(
@@ -155,6 +278,10 @@ async function authenticateRequest(
 	const authHeader = req.headers.get("authorization");
 
 	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+		logAuthFailure(getClientIP(req), {
+			reason: "missing_or_invalid_auth_header",
+			has_header: !!authHeader,
+		});
 		throw APIErrors.unauthorized("Missing or invalid authorization header");
 	}
 
@@ -167,6 +294,10 @@ async function authenticateRequest(
 	} = await supabase.auth.getUser(token);
 
 	if (error || !user) {
+		logAuthFailure(getClientIP(req), {
+			reason: "invalid_or_expired_token",
+			error: error?.message,
+		});
 		throw APIErrors.unauthorized("Invalid or expired token");
 	}
 
@@ -226,7 +357,43 @@ export function withMiddleware(
 			.toString(36)
 			.substr(2, 9)}`;
 
+		const startTime = Date.now();
+
 		try {
+			// Log request if enabled
+			if (options.logRequests !== false) {
+				logger.info("API Request", {
+					requestId,
+					method: req.method,
+					url: req.url,
+					userAgent: req.headers.get("user-agent"),
+					ip: getClientIP(req),
+				});
+			}
+
+			// Validate HTTPS requirement
+			if (options.requireHTTPS) {
+				validateHTTPS(req);
+			}
+
+			// Validate HTTP method
+			if (options.allowedMethods) {
+				validateMethod(req, options.allowedMethods);
+			}
+
+			// Check if IP is blocked
+			const clientIP = getClientIP(req);
+			if (securityAuditor.isIPBlocked(clientIP)) {
+				throw new APIErrorException(
+					"IP_BLOCKED",
+					"Your IP address has been blocked due to suspicious activity",
+					403
+				);
+			}
+
+			// Detect suspicious activity
+			detectSuspiciousActivity(req);
+
 			// Apply rate limiting
 			if (options.rateLimit) {
 				const rateLimitConfig =
@@ -269,9 +436,10 @@ export function withMiddleware(
 			if (options.validateQuery) {
 				const url = new URL(req.url);
 				const queryParams = Object.fromEntries(url.searchParams.entries());
+				const sanitizedParams = sanitizeInput(queryParams);
 				validatedData.query = validateQueryParams(
 					options.validateQuery,
-					queryParams
+					sanitizedParams
 				);
 			}
 
@@ -282,13 +450,35 @@ export function withMiddleware(
 					req.method === "PATCH")
 			) {
 				const body = await req.json().catch(() => ({}));
-				validatedData.body = validateRequestBody(options.validateBody, body);
+				const sanitizedBody = sanitizeInput(body);
+				validatedData.body = validateRequestBody(
+					options.validateBody,
+					sanitizedBody
+				);
 			}
 
 			// Call the actual handler
-			return await handler(context, validatedData);
+			const response = await handler(context, validatedData);
+
+			// Log successful response
+			const duration = Date.now() - startTime;
+			logger.info("API Response", {
+				requestId,
+				status: response.status,
+				duration_ms: duration,
+			});
+
+			return response;
 		} catch (error) {
-			console.error(`API Error [${requestId}]:`, error);
+			const duration = Date.now() - startTime;
+
+			logger.error(`API Error [${requestId}]`, error as Error, {
+				requestId,
+				method: req.method,
+				url: req.url,
+				duration_ms: duration,
+				ip: getClientIP(req),
+			});
 
 			// Handle APIErrorException
 			if (error instanceof APIErrorException) {
