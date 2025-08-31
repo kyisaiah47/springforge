@@ -37,6 +37,7 @@ import {
 	Workflow,
 } from "lucide-react";
 import { linearAnimations, getStaggerDelay } from "@/components/page-transition";
+import Link from "next/link";
 
 export default function Home() {
 	const { user, loading, signInWithGitHub } = useAuth();
@@ -93,15 +94,15 @@ export default function Home() {
 
 					{/* Navigation */}
 					<nav className="hidden md:flex items-center space-x-8">
-						<a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+						<Link href="/features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 							Features
-						</a>
-						<a href="#modules" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+						</Link>
+						<Link href="/modules" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 							Modules
-						</a>
-						<a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+						</Link>
+						<Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 							Pricing
-						</a>
+						</Link>
 						<Button onClick={signInWithGitHub} size="sm" className="ml-4">
 							<Github className="mr-2 h-4 w-4" />
 							Sign In
@@ -119,82 +120,110 @@ export default function Home() {
 			</header>
 
 			{/* Hero Section */}
-			<section className="flex flex-col items-center justify-center min-h-screen px-6 pt-16">
-				<div className="text-center max-w-4xl mx-auto space-y-8">
-					{/* Logo Badge */}
+			<section className="relative flex flex-col items-center justify-center min-h-screen px-6 pt-16">
+				{/* Subtle background gradient */}
+				<div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/10 -z-10" />
+				
+				<div className="text-center max-w-5xl mx-auto space-y-16">
+					{/* Refined Logo */}
 					<div className="flex justify-center mb-8">
-						<Badge 
-							variant="outline" 
-							className="h-12 w-12 rounded-xl p-0 border-border/50 hover:border-border transition-colors flex items-center justify-center"
-						>
-							<svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<circle cx="32" cy="32" r="22" stroke="currentColor" strokeWidth="4" fill="none"/>
-								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.7" transform="rotate(60 32 32)"/>
-								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.5" transform="rotate(-60 32 32)"/>
-								<ellipse cx="32" cy="32" rx="16" ry="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(120 32 32)"/>
-								<circle cx="32" cy="32" r="5" fill="currentColor"/>
-								<circle cx="54" cy="32" r="4" fill="currentColor"/>
-								<circle cx="10" cy="32" r="3" fill="currentColor"/>
-								<circle cx="48" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
-								<circle cx="16" cy="48" r="2.5" fill="currentColor" opacity="0.8"/>
-								<circle cx="48" cy="48" r="2" fill="currentColor" opacity="0.6"/>
-								<circle cx="16" cy="16" r="2" fill="currentColor" opacity="0.6"/>
-							</svg>
-						</Badge>
-					</div>
-
-					{/* Hero Text */}
-					<div className="space-y-6">
-						<h1 className="text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight">
-							<span className="block text-muted-foreground">Developer</span>
-							<span className="block">productivity</span>
-							<span className="block text-muted-foreground text-3xl md:text-4xl lg:text-5xl">
-								reimagined
-							</span>
-						</h1>
-						
-						<p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-							Automate standups, analyze PRs, and run retrospectives with surgical precision.
-						</p>
-					</div>
-
-					{/* CTA */}
-					<div className="flex flex-col items-center space-y-4">
-						<Button 
-							onClick={signInWithGitHub}
-							size="lg"
-							className="h-12 px-8 text-base font-medium"
-						>
-							<Github className="mr-2 h-5 w-5" />
-							Continue with GitHub
-						</Button>
-						
-						<div className="flex items-center space-x-4 text-sm text-muted-foreground">
-							<span>Free forever</span>
-							<div className="w-1 h-1 bg-muted-foreground/50 rounded-full" />
-							<span>No credit card required</span>
+						<div className="relative group">
+							<div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+							<Badge 
+								variant="outline" 
+								className="relative h-20 w-20 rounded-full p-0 border-border/30 hover:border-border/60 transition-all duration-300 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+							>
+								<svg width="36" height="36" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-300 group-hover:scale-110">
+									<circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+									<ellipse cx="32" cy="32" rx="26" ry="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(45 32 32)"/>
+									<ellipse cx="32" cy="32" rx="26" ry="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.3" transform="rotate(-45 32 32)"/>
+									<circle cx="32" cy="32" r="3" fill="currentColor"/>
+									<circle cx="50" cy="32" r="2" fill="currentColor" opacity="0.8"/>
+									<circle cx="14" cy="32" r="2" fill="currentColor" opacity="0.6"/>
+								</svg>
+							</Badge>
 						</div>
 					</div>
 
-					{/* Quick Features Overview */}
-					<div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto mt-16">
-						{[
-							{ icon: Users, label: "AutoStand" },
-							{ icon: GitPullRequest, label: "PR Radar" },
-							{ icon: MessageSquare, label: "Retro Arena" },
-							{ icon: Gamepad2, label: "Debug Arcade" },
-						].map((feature, index) => (
-							<div 
-								key={feature.label}
-								className="group p-4 rounded-lg border border-border/50 hover:border-border transition-all duration-200 cursor-default"
-								{...getStaggerDelay(index, 100)}
-							>
-								<div className="text-center">
-									<feature.icon className="h-5 w-5 mx-auto mb-2 text-muted-foreground group-hover:text-foreground transition-colors" />
-									<div className="text-sm font-medium">{feature.label}</div>
-								</div>
+					{/* Sophisticated Typography */}
+					<div className="space-y-10">
+						<div className="space-y-6">
+							<div className="inline-flex items-center px-3 py-1 rounded-full bg-muted/50 border border-border/50">
+								<div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
+								<span className="text-sm font-medium text-muted-foreground">Trusted by 10,000+ developers</span>
 							</div>
-						))}
+							
+							<h1 className="text-6xl md:text-8xl font-light tracking-tight leading-[0.9]">
+								<span className="block text-foreground/90">The future of</span>
+								<span className="block font-medium bg-gradient-to-r from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent">
+									development workflows
+								</span>
+							</h1>
+							
+							<p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-light tracking-wide">
+								Orbit transforms how teams ship software with automated standups, 
+								intelligent PR reviews, and retrospectives that drive real change.
+							</p>
+						</div>
+
+						{/* Elegant Stats */}
+						<Card className="inline-flex items-center p-6 bg-background/50 backdrop-blur-sm border-border/30 rounded-2xl">
+							<CardContent className="p-0">
+								<div className="flex items-center gap-12">
+									<div className="text-center">
+										<div className="text-3xl font-light text-foreground mb-1">89<span className="text-lg">%</span></div>
+										<div className="text-sm text-muted-foreground font-medium">Time Saved</div>
+									</div>
+									<Separator orientation="vertical" className="h-10 bg-border/50" />
+									<div className="text-center">
+										<div className="text-3xl font-light text-foreground mb-1">3.4<span className="text-lg">×</span></div>
+										<div className="text-sm text-muted-foreground font-medium">Faster Delivery</div>
+									</div>
+									<Separator orientation="vertical" className="h-10 bg-border/50" />
+									<div className="text-center">
+										<div className="text-3xl font-light text-foreground mb-1">$127<span className="text-lg">k</span></div>
+										<div className="text-sm text-muted-foreground font-medium">Annual Savings</div>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+					</div>
+
+					{/* Refined CTA */}
+					<div className="flex flex-col items-center space-y-8">
+						<div className="flex flex-col sm:flex-row gap-3">
+							<Button 
+								onClick={signInWithGitHub}
+								size="lg"
+								className="h-14 px-10 text-base font-medium bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 rounded-xl"
+							>
+								<Github className="mr-2 h-5 w-5" />
+								Start Building
+							</Button>
+							<Button 
+								variant="outline"
+								size="lg"
+								className="h-14 px-10 text-base font-medium border-border/50 hover:border-border hover:bg-muted/30 transition-all duration-200 rounded-xl"
+							>
+								Watch Demo
+								<span className="ml-2 text-xs opacity-60">2m</span>
+							</Button>
+						</div>
+						
+						<div className="flex items-center space-x-8 text-sm text-muted-foreground font-medium">
+							<div className="flex items-center space-x-2">
+								<div className="w-1 h-1 bg-green-500 rounded-full" />
+								<span>Free forever</span>
+							</div>
+							<div className="flex items-center space-x-2">
+								<div className="w-1 h-1 bg-blue-500 rounded-full" />
+								<span>Setup in 2 minutes</span>
+							</div>
+							<div className="flex items-center space-x-2">
+								<div className="w-1 h-1 bg-purple-500 rounded-full" />
+								<span>No credit card required</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>
