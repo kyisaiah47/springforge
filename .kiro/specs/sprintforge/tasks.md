@@ -115,7 +115,7 @@ d# Implementation Plan
   - Optional: Add Supabase real-time subscriptions if time permits
   - _Requirements: 4.2, 4.4, 4.6_
 
-- [ ] 15. Retro Arena Module - Core UI Components 🟡
+- [x] 15. Retro Arena Module - Core UI Components 🟡
 
   - Create RetroBoard main interface with column layout
   - Build StickyNote component (basic version, drag-and-drop optional)

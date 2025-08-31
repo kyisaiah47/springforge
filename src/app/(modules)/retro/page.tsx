@@ -3,16 +3,17 @@
 import { MessageSquare } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function RetroPage() {
+	const router = useRouter();
+
 	const handleCreateRetro = () => {
 		toast.info("Retro creation coming soon! For now, check out the demo data.");
 	};
 
 	const handleViewDemo = () => {
-		toast.info(
-			"Demo retro data available! Load demo data from the dashboard to explore."
-		);
+		router.push("/retro/demo");
 	};
 
 	return (
