@@ -15,6 +15,8 @@ import {
 import { StickyNote } from "./sticky-note";
 import { NoteCreator } from "./note-creator";
 import { ExportDialog, MergeDuplicatesDialog } from "./export-dialog";
+import { CollaborativeCursor, ConnectionStatus } from "@/components/realtime";
+import { useRealtimeSubscription } from "@/lib/realtime/realtime-provider";
 
 interface RetroBoardProps {
 	retro: RetroWithDetails;
@@ -112,8 +114,47 @@ export function RetroBoard({
 	const totalNotes = notes.length;
 	const totalVotes = notes.reduce((sum, note) => sum + note.votes, 0);
 
+	// Set up real-time subscription for retro notes
+	useRealtimeSubscription(
+		`retro_${retro.id}`,
+		[
+			{
+				table: "retro_notes",
+				event: "INSERT",
+				filter: `retro_id=eq.${retro.id}`,
+				callback: (payload) => {
+					// Note will be handled by parent component's state management
+					console.log("New retro note added:", payload.new);
+				},
+			},
+			{
+				table: "retro_notes",
+				event: "UPDATE",
+				filter: `retro_id=eq.${retro.id}`,
+				callback: (payload) => {
+					console.log("Retro note updated:", payload.new);
+				},
+			},
+			{
+				table: "retro_notes",
+				event: "DELETE",
+				filter: `retro_id=eq.${retro.id}`,
+				callback: (payload) => {
+					console.log("Retro note deleted:", payload.old);
+				},
+			},
+		],
+		true // enabled
+	);
+
 	return (
-		<div className={cn("space-y-6", className)}>
+		<CollaborativeCursor
+			roomId={retro.id}
+			userId={currentUserId || "anonymous"}
+			userName={currentUserId || "Anonymous User"}
+			className={cn("space-y-6", className)}
+			enabled={retro.status === "active" || retro.status === "voting"}
+		>
 			{/* Retro Header */}
 			<div className="flex items-center justify-between">
 				<div>
@@ -129,6 +170,9 @@ export function RetroBoard({
 					<div className="text-sm text-muted-foreground">
 						{totalNotes} notes • {totalVotes} votes
 					</div>
+
+					{/* Real-time connection status */}
+					<ConnectionStatus />
 
 					{/* Export and Advanced Features */}
 					{retro.status === "completed" && (
@@ -236,6 +280,6 @@ export function RetroBoard({
 					);
 				})}
 			</div>
-		</div>
+		</CollaborativeCursor>
 	);
 }

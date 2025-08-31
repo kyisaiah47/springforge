@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth/auth-provider";
 import { OnboardingProvider } from "@/lib/onboarding/onboarding-provider";
+import { RealtimeProvider } from "@/lib/realtime/realtime-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ErrorBoundary } from "@/lib/monitoring/error-boundary";
 import { Toaster } from "sonner";
@@ -88,10 +89,12 @@ export default function RootLayout({
 						disableTransitionOnChange
 					>
 						<AuthProvider>
-							<OnboardingProvider>
-								{children}
-								<Toaster />
-							</OnboardingProvider>
+							<RealtimeProvider>
+								<OnboardingProvider>
+									{children}
+									<Toaster />
+								</OnboardingProvider>
+							</RealtimeProvider>
 						</AuthProvider>
 					</ThemeProvider>
 				</ErrorBoundary>
