@@ -134,7 +134,10 @@ export default function DashboardPage() {
 				</CardHeader>
 			</Card>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+			<div
+				className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+				data-tour="modules"
+			>
 				{modules.map((module) => (
 					<Link
 						key={module.title}
@@ -164,23 +167,52 @@ export default function DashboardPage() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<div className="space-y-2 text-sm">
-						<p>
-							• Use{" "}
-							<kbd className="px-2 py-1 bg-muted rounded text-xs">Cmd+K</kbd> to
-							open the command palette
-						</p>
-						<p>
-							• Navigate quickly with keyboard shortcuts:{" "}
-							<kbd className="px-2 py-1 bg-muted rounded text-xs">g+s</kbd> for
-							AutoStand,{" "}
-							<kbd className="px-2 py-1 bg-muted rounded text-xs">g+p</kbd> for
-							PR Radar
-						</p>
-						<p>• Toggle between light and dark themes from the user menu</p>
+					<div className="space-y-3">
+						<div className="space-y-2 text-sm">
+							<p>
+								• Use{" "}
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">Cmd+K</kbd>{" "}
+								to open the command palette
+							</p>
+							<p>
+								• Navigate quickly with keyboard shortcuts:{" "}
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">g+s</kbd>{" "}
+								for AutoStand,{" "}
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">g+p</kbd>{" "}
+								for PR Radar
+							</p>
+							<p>• Toggle between light and dark themes from the user menu</p>
+						</div>
+						{hasCompletedOnboarding && (
+							<div className="pt-2 border-t">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={startGuidedTour}
+									className="flex items-center gap-2"
+								>
+									<Play className="h-4 w-4" />
+									Take the Tour Again
+								</Button>
+							</div>
+						)}
 					</div>
 				</CardContent>
 			</Card>
+
+			{/* Onboarding Flow */}
+			<OnboardingFlow
+				isOpen={showOnboardingFlow}
+				onClose={closeOnboardingFlow}
+				onComplete={handleOnboardingComplete}
+			/>
+
+			{/* Guided Tour */}
+			<GuidedTour
+				isOpen={showGuidedTour}
+				onClose={closeGuidedTour}
+				steps={defaultTourSteps}
+			/>
 		</div>
 	);
 }

@@ -46,7 +46,7 @@ export function AppShell({ children }: AppShellProps) {
 	return (
 		<SidebarProvider>
 			<div className="flex min-h-screen w-full">
-				<Sidebar>
+				<Sidebar data-tour="sidebar">
 					<SidebarHeader className="border-b border-sidebar-border">
 						<div className="flex items-center gap-2 px-4 py-2">
 							<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -70,6 +70,7 @@ export function AppShell({ children }: AppShellProps) {
 									<Button
 										variant="ghost"
 										className="h-8 w-full justify-start gap-2 px-2"
+										data-tour="user-menu"
 									>
 										<Avatar className="h-6 w-6">
 											<AvatarImage

@@ -1,6 +1,6 @@
 "use client";
 
-import { Gamepad2, Trophy } from "lucide-react";
+import { Gamepad2 } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { toast } from "sonner";
 

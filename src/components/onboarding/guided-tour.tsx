@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { X, ArrowLeft, ArrowRight, Lightbulb } from "lucide-react";
-import { cn } from "@/lib/utils";
+// cn utility not needed for this implementation
 
 interface TourStep {
 	id: string;
@@ -26,7 +26,7 @@ interface GuidedTourProps {
 
 export function GuidedTour({ isOpen, onClose, steps }: GuidedTourProps) {
 	const [currentStep, setCurrentStep] = useState(0);
-	const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
+	const [, setTargetElement] = useState<HTMLElement | null>(null);
 
 	useEffect(() => {
 		if (!isOpen || !steps[currentStep]?.target) {

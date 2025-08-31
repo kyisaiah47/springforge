@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// Card components not needed for this implementation
 import {
 	Dialog,
 	DialogContent,
@@ -193,8 +193,8 @@ export function OnboardingFlow({
 						<div>
 							<h3 className="text-xl font-semibold mb-2">Load Demo Data</h3>
 							<p className="text-muted-foreground mb-4">
-								We'll create a demo organization with sample data so you can
-								explore all features immediately.
+								We&apos;ll create a demo organization with sample data so you
+								can explore all features immediately.
 							</p>
 							<div className="bg-muted p-4 rounded-lg text-sm">
 								<p className="font-medium mb-2">Demo data includes:</p>

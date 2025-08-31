@@ -11,7 +11,8 @@
 		"test:run": "vitest run",
 		"db:migrate": "tsx scripts/run-migrations.ts",
 		"db:seed": "tsx scripts/seed-demo.ts",
-		"db:reset": "npm run db:migrate && npm run db:seed"
+		"db:reset": "npm run db:migrate && npm run db:seed",
+		"db:test": "tsx scripts/test-demo-seed.ts"
 	},
 	"dependencies": {
 		"@radix-ui/react-avatar": "^1.1.10",

@@ -12,7 +12,7 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
 	try {
 		console.log("🌱 Starting demo data seeding via API...");
 

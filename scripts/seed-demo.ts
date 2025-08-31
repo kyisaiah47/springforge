@@ -28,30 +28,42 @@ async function seedDemoData() {
 		if (orgError) throw orgError;
 		console.log("✅ Created demo organization:", org.name);
 
-		// Create demo members
+		// Create demo members with more realistic data
 		const members = [
 			{
 				org_id: org.id,
-				email: "alice@demo.com",
+				email: "alice.johnson@demo.com",
 				github_login: "alice-dev",
 				github_id: "12345",
-				avatar_url: "https://github.com/alice-dev.png",
+				avatar_url: "https://avatars.githubusercontent.com/u/12345?v=4",
+				slack_user_id: "U01234567",
 				role: "admin" as const,
 			},
 			{
 				org_id: org.id,
-				email: "bob@demo.com",
+				email: "bob.smith@demo.com",
 				github_login: "bob-coder",
 				github_id: "67890",
-				avatar_url: "https://github.com/bob-coder.png",
+				avatar_url: "https://avatars.githubusercontent.com/u/67890?v=4",
+				slack_user_id: "U09876543",
 				role: "member" as const,
 			},
 			{
 				org_id: org.id,
-				email: "charlie@demo.com",
+				email: "charlie.brown@demo.com",
 				github_login: "charlie-dev",
 				github_id: "11111",
-				avatar_url: "https://github.com/charlie-dev.png",
+				avatar_url: "https://avatars.githubusercontent.com/u/11111?v=4",
+				slack_user_id: "U05555555",
+				role: "member" as const,
+			},
+			{
+				org_id: org.id,
+				email: "diana.prince@demo.com",
+				github_login: "diana-frontend",
+				github_id: "22222",
+				avatar_url: "https://avatars.githubusercontent.com/u/22222?v=4",
+				slack_user_id: "U02468135",
 				role: "member" as const,
 			},
 		];

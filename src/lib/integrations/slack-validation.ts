@@ -49,7 +49,9 @@ export async function validateSlackWebhookUrl(
 		return result;
 	}
 
-	result.details.format_valid = true;
+	if (result.details) {
+		result.details.format_valid = true;
+	}
 
 	// Test connectivity if requested
 	if (options?.test_connectivity !== false) {
@@ -69,7 +71,7 @@ export async function validateSlackWebhookUrl(
 				timeoutPromise,
 			]);
 
-			if (success) {
+			if (success && result.details) {
 				result.details.connectivity_test = true;
 				result.details.response_time_ms = Date.now() - startTime;
 				result.valid = true;
