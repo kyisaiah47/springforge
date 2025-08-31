@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION acquire_job_lock(
     p_job_name TEXT,
     p_locked_by TEXT,
     p_duration_minutes INTEGER DEFAULT 60
-) RETURNS BOOLEAN AS $
+) RETURNS BOOLEAN AS $$
 DECLARE
     lock_expires_at TIMESTAMPTZ;
     existing_lock RECORD;
@@ -48,13 +48,13 @@ BEGIN
     
     RETURN TRUE;
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Function to release a job lock
 CREATE OR REPLACE FUNCTION release_job_lock(
     p_job_name TEXT,
     p_locked_by TEXT
-) RETURNS BOOLEAN AS $
+) RETURNS BOOLEAN AS $$
 DECLARE
     deleted_count INTEGER;
 BEGIN
@@ -66,10 +66,10 @@ BEGIN
     
     RETURN deleted_count > 0;
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Function to check if a job is locked
-CREATE OR REPLACE FUNCTION is_job_locked(p_job_name TEXT) RETURNS BOOLEAN AS $
+CREATE OR REPLACE FUNCTION is_job_locked(p_job_name TEXT) RETURNS BOOLEAN AS $$
 BEGIN
     -- Clean up expired locks first
     DELETE FROM job_locks 
@@ -81,4 +81,4 @@ BEGIN
         WHERE job_name = p_job_name AND expires_at > NOW()
     );
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;

@@ -26,62 +26,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [loading, setLoading] = useState(true);
 	const supabase = createClient();
 
-	const handleUserSignIn = useCallback(
-		async (user: User) => {
-			try {
-				// Check if member exists
-				const { data: existingMember } = await supabase
-					.from("members")
-					.select("*")
-					.eq("email", user.email!)
-					.eq("deleted_at", null)
-					.single();
+	const handleUserSignIn = useCallback(async (user: User) => {
+		try {
+			// Call the onboarding API endpoint
+			const response = await fetch("/api/auth/onboard", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
 
-				if (!existingMember) {
-					// Create new organization and member for first-time users
-					const { data: org, error: orgError } = await supabase
-						.from("organizations")
-						.insert({
-							name: `${user.user_metadata?.full_name || user.email}'s Team`,
-							settings: {
-								timezone: "America/New_York",
-							},
-						})
-						.select()
-						.single();
-
-					if (orgError) throw orgError;
-
-					// Create member record
-					const { error: memberError } = await supabase.from("members").insert({
-						org_id: org.id,
-						email: user.email!,
-						github_login: user.user_metadata?.user_name,
-						github_id: user.user_metadata?.provider_id,
-						avatar_url: user.user_metadata?.avatar_url,
-						role: "admin", // First user is admin
-					});
-
-					if (memberError) throw memberError;
-				} else {
-					// Update existing member with latest GitHub data
-					const { error: updateError } = await supabase
-						.from("members")
-						.update({
-							github_login: user.user_metadata?.user_name,
-							github_id: user.user_metadata?.provider_id,
-							avatar_url: user.user_metadata?.avatar_url,
-						})
-						.eq("id", existingMember.id);
-
-					if (updateError) throw updateError;
-				}
-			} catch (error) {
-				console.error("Error handling user sign in:", error);
+			if (!response.ok) {
+				throw new Error("Failed to onboard user");
 			}
-		},
-		[supabase]
-	);
+
+			const result = await response.json();
+			console.log("User onboarded:", result);
+		} catch (error) {
+			console.error("Error handling user sign in:", error);
+		}
+	}, []);
 
 	useEffect(() => {
 		// Get initial session

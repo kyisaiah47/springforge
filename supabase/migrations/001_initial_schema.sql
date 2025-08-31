@@ -31,8 +31,7 @@ CREATE TABLE members (
     role member_role DEFAULT 'member',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ NULL,
-    UNIQUE(org_id, email),
-    UNIQUE(github_id) WHERE github_id IS NOT NULL
+    UNIQUE(org_id, email)
 );
 
 -- Integrations table
@@ -136,6 +135,8 @@ CREATE TABLE arcade_runs (
 -- Create indexes for performance
 CREATE INDEX idx_members_org_id ON members(org_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_members_github_id ON members(github_id) WHERE github_id IS NOT NULL;
+-- Create unique index for github_id (partial unique constraint)
+CREATE UNIQUE INDEX idx_members_github_id_unique ON members(github_id) WHERE github_id IS NOT NULL;
 CREATE INDEX idx_integrations_org_id_type ON integrations(org_id, type) WHERE deleted_at IS NULL;
 CREATE INDEX idx_standups_org_member_date ON standups(org_id, member_id, date);
 CREATE INDEX idx_standups_date ON standups(date);

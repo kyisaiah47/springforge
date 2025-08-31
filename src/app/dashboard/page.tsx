@@ -18,6 +18,7 @@ import {
 	Gamepad2,
 	Play,
 	HelpCircle,
+	Database,
 } from "lucide-react";
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
 import {
@@ -87,6 +88,25 @@ export default function DashboardPage() {
 		markDemoDataSeeded();
 		// Optionally start the guided tour after onboarding
 		setTimeout(() => startGuidedTour(), 500);
+	};
+
+	const handleSeedDemoData = async () => {
+		try {
+			const response = await fetch("/api/admin/seed-demo", {
+				method: "POST",
+			});
+
+			if (response.ok) {
+				alert("Demo data seeded successfully!");
+				window.location.reload();
+			} else {
+				const error = await response.json();
+				alert(`Error: ${error.error}`);
+			}
+		} catch (error) {
+			console.error("Error seeding demo data:", error);
+			alert("Failed to seed demo data");
+		}
 	};
 
 	return (
@@ -184,7 +204,7 @@ export default function DashboardPage() {
 							<p>• Toggle between light and dark themes from the user menu</p>
 						</div>
 						{hasCompletedOnboarding && (
-							<div className="pt-2 border-t">
+							<div className="pt-2 border-t flex gap-2">
 								<Button
 									variant="outline"
 									size="sm"
@@ -193,6 +213,15 @@ export default function DashboardPage() {
 								>
 									<Play className="h-4 w-4" />
 									Take the Tour Again
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={handleSeedDemoData}
+									className="flex items-center gap-2"
+								>
+									<Database className="h-4 w-4" />
+									Seed Demo Data
 								</Button>
 							</div>
 						)}

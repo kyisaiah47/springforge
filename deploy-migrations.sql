@@ -42,8 +42,7 @@ CREATE TABLE members (
     role member_role DEFAULT 'member',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ NULL,
-    UNIQUE(org_id, email),
-    UNIQUE(github_id) WHERE github_id IS NOT NULL
+    UNIQUE(org_id, email)
 );
 
 -- Integrations table
@@ -147,6 +146,8 @@ CREATE TABLE arcade_runs (
 -- Create indexes for performance
 CREATE INDEX idx_members_org_id ON members(org_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_members_github_id ON members(github_id) WHERE github_id IS NOT NULL;
+-- Create unique index for github_id (partial unique constraint)
+CREATE UNIQUE INDEX idx_members_github_id_unique ON members(github_id) WHERE github_id IS NOT NULL;
 CREATE INDEX idx_integrations_org_id_type ON integrations(org_id, type) WHERE deleted_at IS NULL;
 CREATE INDEX idx_standups_org_member_date ON standups(org_id, member_id, date);
 CREATE INDEX idx_standups_date ON standups(date);
@@ -386,7 +387,7 @@ CREATE OR REPLACE FUNCTION acquire_job_lock(
     p_job_name TEXT,
     p_locked_by TEXT,
     p_duration_minutes INTEGER DEFAULT 60
-) RETURNS BOOLEAN AS $
+) RETURNS BOOLEAN AS $$
 DECLARE
     lock_expires_at TIMESTAMPTZ;
     existing_lock RECORD;
@@ -417,13 +418,13 @@ BEGIN
     
     RETURN TRUE;
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Function to release a job lock
 CREATE OR REPLACE FUNCTION release_job_lock(
     p_job_name TEXT,
     p_locked_by TEXT
-) RETURNS BOOLEAN AS $
+) RETURNS BOOLEAN AS $$
 DECLARE
     deleted_count INTEGER;
 BEGIN
@@ -435,10 +436,10 @@ BEGIN
     
     RETURN deleted_count > 0;
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Function to check if a job is locked
-CREATE OR REPLACE FUNCTION is_job_locked(p_job_name TEXT) RETURNS BOOLEAN AS $
+CREATE OR REPLACE FUNCTION is_job_locked(p_job_name TEXT) RETURNS BOOLEAN AS $$
 BEGIN
     -- Clean up expired locks first
     DELETE FROM job_locks 
@@ -450,9 +451,30 @@ BEGIN
         WHERE job_name = p_job_name AND expires_at > NOW()
     );
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 INSERT INTO _migrations (filename) VALUES ('003_job_lock_table.sql') ON CONFLICT (filename) DO NOTHING;
+
+-- Migration: 003_onboarding_policies.sql
+-- Add policies to allow server-side onboarding
+
+-- Allow authenticated users to create organizations (for onboarding)
+CREATE POLICY "Authenticated users can create organizations" ON organizations
+    FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+-- Allow authenticated users to create member records (for onboarding)
+CREATE POLICY "Authenticated users can create members" ON members
+    FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+-- Update the members policy to allow users to view their own record even if they don't have an org yet
+DROP POLICY IF EXISTS "Users can view members in their organization" ON members;
+CREATE POLICY "Users can view members in their organization" ON members
+    FOR SELECT USING (
+        (org_id = get_current_org() AND deleted_at IS NULL) OR 
+        (email = auth.jwt() ->> 'email' AND deleted_at IS NULL)
+    );
+
+INSERT INTO _migrations (filename) VALUES ('003_onboarding_policies.sql') ON CONFLICT (filename) DO NOTHING;
 
 -- Migration: 004_performance_indexes.sql
 -- Performance optimization indexes for SprintForge

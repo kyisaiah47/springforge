@@ -101,6 +101,245 @@ Visit [http://localhost:3000](http://localhost:3000) and sign in with GitHub!
 - **[Onboarding Guide](./ONBOARDING.md)** - User onboarding and demo data
 - **[API Documentation](#api-documentation)** - Complete API reference
 
+## 🗄️ Database Schema
+
+SprintForge uses PostgreSQL with Supabase, featuring Row Level Security (RLS) for multi-tenant data isolation.
+
+### Custom Types
+
+```sql
+-- Enumerated types for type safety
+CREATE TYPE member_role AS ENUM ('admin', 'member');
+CREATE TYPE integration_type AS ENUM ('github', 'slack');
+CREATE TYPE pr_status AS ENUM ('open', 'merged', 'closed');
+CREATE TYPE retro_status AS ENUM ('planning', 'active', 'voting', 'completed', 'archived');
+CREATE TYPE retro_column AS ENUM ('went_well', 'went_poorly', 'ideas', 'action_items');
+CREATE TYPE programming_language AS ENUM ('typescript', 'python');
+CREATE TYPE difficulty_level AS ENUM ('easy', 'medium', 'hard');
+```
+
+### Core Tables
+
+#### Organizations
+
+```sql
+organizations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    settings JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ NULL
+)
+```
+
+#### Members
+
+```sql
+members (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    github_login TEXT NULL,
+    github_id TEXT NULL,
+    avatar_url TEXT NULL,
+    slack_user_id TEXT NULL,
+    role member_role DEFAULT 'member',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ NULL,
+    UNIQUE(org_id, email)
+)
+```
+
+#### Integrations
+
+```sql
+integrations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    type integration_type NOT NULL,
+    access_token TEXT NULL,
+    settings JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ NULL,
+    UNIQUE(org_id, type)
+)
+```
+
+### Module Tables
+
+#### AutoStand - Standups
+
+```sql
+standups (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    member_id UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    yesterday TEXT[] DEFAULT '{}',
+    today TEXT[] DEFAULT '{}',
+    blockers TEXT[] DEFAULT '{}',
+    raw_github_data JSONB NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(org_id, member_id, date)
+)
+```
+
+#### PR Radar - PR Insights
+
+```sql
+pr_insights (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    repo TEXT NOT NULL,
+    number INTEGER NOT NULL,
+    author_member_id UUID NULL REFERENCES members(id) ON DELETE SET NULL,
+    additions INTEGER DEFAULT 0,
+    deletions INTEGER DEFAULT 0,
+    files_changed INTEGER DEFAULT 0,
+    tests_changed INTEGER DEFAULT 0,
+    touched_paths TEXT[] DEFAULT '{}',
+    size_score DECIMAL(3,1) DEFAULT 0.0,
+    risk_score DECIMAL(3,1) DEFAULT 0.0,
+    suggested_reviewers TEXT[] DEFAULT '{}',
+    status pr_status DEFAULT 'open',
+    opened_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(org_id, repo, number)
+)
+```
+
+#### Retro Arena - Retros & Notes
+
+```sql
+retros (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    sprint TEXT NULL,
+    status retro_status DEFAULT 'planning',
+    created_by UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+)
+
+retro_notes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    retro_id UUID NOT NULL REFERENCES retros(id) ON DELETE CASCADE,
+    author_member_id UUID NULL REFERENCES members(id) ON DELETE SET NULL,
+    column_key retro_column NOT NULL,
+    text TEXT NOT NULL,
+    color TEXT DEFAULT '#fbbf24',
+    votes INTEGER DEFAULT 0,
+    is_anonymous BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+)
+```
+
+#### Debug Arcade - Levels & Runs
+
+```sql
+arcade_levels (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    slug TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    language programming_language NOT NULL,
+    difficulty difficulty_level NOT NULL,
+    starter_code TEXT NOT NULL,
+    test_cases TEXT NOT NULL,
+    solution TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+)
+
+arcade_runs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    level_id UUID NOT NULL REFERENCES arcade_levels(id) ON DELETE CASCADE,
+    member_id UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    submitted_code TEXT NOT NULL,
+    passed BOOLEAN DEFAULT FALSE,
+    duration_ms INTEGER DEFAULT 0,
+    points_awarded INTEGER DEFAULT 0,
+    test_output TEXT DEFAULT '',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+)
+```
+
+### System Tables
+
+#### Job Locks (Cron Management)
+
+```sql
+job_locks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    job_name TEXT NOT NULL UNIQUE,
+    locked_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    locked_by TEXT NOT NULL,
+    expires_at TIMESTAMPTZ NOT NULL,
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+)
+```
+
+### Database Functions
+
+#### Job Lock Management
+
+```sql
+-- Acquire a distributed lock for cron jobs
+acquire_job_lock(job_name TEXT, locked_by TEXT, duration_minutes INTEGER DEFAULT 60) RETURNS BOOLEAN
+
+-- Release a job lock
+release_job_lock(job_name TEXT, locked_by TEXT) RETURNS BOOLEAN
+
+-- Check if a job is currently locked
+is_job_locked(job_name TEXT) RETURNS BOOLEAN
+```
+
+#### RLS Helper Functions
+
+```sql
+-- Get current authenticated user's member record
+get_current_member() RETURNS UUID
+
+-- Get current user's organization ID
+get_current_org() RETURNS UUID
+
+-- Check if current user is an admin
+is_admin() RETURNS BOOLEAN
+```
+
+### Key Features
+
+- **Row Level Security (RLS)**: All tables have comprehensive policies ensuring users only access their organization's data
+- **Soft Deletes**: Organizations, members, and integrations use `deleted_at` for soft deletion
+- **Unique Constraints**: GitHub IDs are unique across the platform (partial unique index)
+- **Performance Indexes**: Comprehensive indexing strategy including:
+  - Composite indexes for common query patterns
+  - Partial indexes for filtered queries (stale PRs, high-risk PRs)
+  - Optimized leaderboard queries with points and duration
+- **Triggers**: Automatic `updated_at` timestamp updates for PR insights
+- **Distributed Locking**: Job lock system prevents duplicate cron job executions
+- **Onboarding Support**: Special policies allow authenticated users to create organizations and member records
+
+### Security Policies
+
+The database implements comprehensive RLS policies:
+
+- **Multi-tenant Isolation**: Users can only access data within their organization
+- **Role-based Access**: Admins have additional permissions for organization management
+- **Self-service**: Users can update their own profiles and create their own content
+- **Anonymous Support**: Retro notes can be posted anonymously
+- **Public Arcade**: Arcade levels are publicly readable for all users
+
+### Migration Management
+
+Database changes are managed through numbered migration files in `supabase/migrations/`:
+
+- `001_initial_schema.sql` - Core tables, types, and relationships
+- `002_rls_policies.sql` - Row Level Security policies and helper functions
+- `003_job_lock_table.sql` - Distributed job locking system
+- `003_onboarding_policies.sql` - Onboarding flow policies
+- `004_performance_indexes.sql` - Performance optimization indexes and analytics
+
 ## 🏗️ Project Structure
 
 ```
