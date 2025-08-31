@@ -96,8 +96,6 @@ export function CommandPalette() {
 		<CommandDialog
 			open={open}
 			onOpenChange={setOpen}
-			aria-label="Command palette"
-			role="dialog"
 		>
 			<CommandInput
 				placeholder="Type a command or search..."

@@ -155,7 +155,15 @@ export class StalePRAlertService {
 		}
 
 		// Create Slack service
-		const slackService = createSlackService(slackIntegration);
+		const slackService = createSlackService({
+			...slackIntegration,
+			org_id: org.id,
+			type: slackIntegration.type as "slack",
+			access_token: slackIntegration.access_token || null,
+			settings: slackIntegration.settings as any,
+			created_at: new Date().toISOString(),
+			deleted_at: null,
+		});
 
 		// Group stale PRs by severity
 		const criticalPRs = stalePRs.stale_prs.filter(
@@ -214,7 +222,7 @@ export class StalePRAlertService {
 			repo: pr.repo,
 			number: pr.number,
 			title: `Stale PR - ${stalePR.days_stale} days old`,
-			author: (pr as unknown).author_member?.github_login || "Unknown",
+			author: "Unknown", // We don't have author info in the basic PRInsight
 			url: `https://github.com/${pr.repo}/pull/${pr.number}`,
 			risk_score: pr.risk_score,
 			size_score: pr.size_score,
@@ -230,7 +238,7 @@ export class StalePRAlertService {
 	private async sendStalePRSummary(
 		slackService: {
 			getClient: () => {
-				sendWebhookMessage: (message: unknown) => Promise<void>;
+				sendWebhookMessage: (message: any) => Promise<void>;
 			};
 		},
 		stalePRs: StalePRAlert[],

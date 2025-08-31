@@ -65,7 +65,7 @@ export function CollaborativeCursor({
 	const supabase = createClient();
 	const channelRef = useRef<any>(null);
 	const lastSentPosition = useRef<CursorPosition | null>(null);
-	const throttleTimeoutRef = useRef<NodeJS.Timeout>();
+	const throttleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	const finalUserColor = userColor || getUserColor(userId);
 

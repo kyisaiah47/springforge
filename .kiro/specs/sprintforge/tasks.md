@@ -163,7 +163,7 @@ d# Implementation Plan
   - Write tests for real-time event handling across all modules
   - _Requirements: 4.6, 6.6_
 
-- [ ] 21. Settings and Organization Management 🟡
+- [x] 21. Settings and Organization Management 🟡
 
   - Create organization settings page with integration configuration
   - Implement team member management with role-based permissions
@@ -180,7 +180,7 @@ d# Implementation Plan
   - Seed project with realistic GitHub + Slack demo organizations
   - _Requirements: 1.1, 1.2_
 
-- [ ] 23. Testing Infrastructure 🟡
+- [-] 23. Testing Infrastructure 🟡
 
   - Set up Vitest for unit testing (expand from inline tests in modules)
   - Configure Playwright for basic E2E smoke tests

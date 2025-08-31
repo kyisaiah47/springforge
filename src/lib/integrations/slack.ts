@@ -209,7 +209,8 @@ export function createSlackClient(
 	}
 
 	const config: SlackClientConfig = {
-		webhookUrl: integration.settings?.webhook_url as string,
+		webhookUrl: (integration.settings as Record<string, unknown>)
+			?.webhook_url as string,
 		botToken: integration.access_token || undefined,
 	};
 

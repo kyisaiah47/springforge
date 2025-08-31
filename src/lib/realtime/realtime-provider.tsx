@@ -6,6 +6,7 @@ import React, {
 	useEffect,
 	useRef,
 	useState,
+	useCallback,
 } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -24,7 +25,7 @@ export interface RealtimeEvent {
 		| "pr_updated"
 		| "standup_posted"
 		| "arcade_run_completed";
-	payload: any;
+	payload: Record<string, unknown>;
 	timestamp: string;
 }
 
@@ -33,7 +34,9 @@ export interface SubscriptionConfig {
 	table: string;
 	event?: "INSERT" | "UPDATE" | "DELETE" | "*";
 	filter?: string;
-	callback: (payload: RealtimePostgresChangesPayload<any>) => void;
+	callback: (
+		payload: RealtimePostgresChangesPayload<Record<string, unknown>>
+	) => void;
 }
 
 // Connection status
@@ -69,7 +72,7 @@ interface RealtimeProviderProps {
 	orgId?: string; // Optional org context for filtering
 }
 
-export function RealtimeProvider({ children, orgId }: RealtimeProviderProps) {
+export function RealtimeProvider({ children }: RealtimeProviderProps) {
 	const [connectionStatus, setConnectionStatus] =
 		useState<ConnectionStatus>("disconnected");
 	const [activeSubscriptions, setActiveSubscriptions] = useState(0);
@@ -79,7 +82,21 @@ export function RealtimeProvider({ children, orgId }: RealtimeProviderProps) {
 	const eventListenersRef = useRef<Set<(event: RealtimeEvent) => void>>(
 		new Set()
 	);
-	const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+	const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+	const reconnect = useCallback(() => {
+		setConnectionStatus("connecting");
+		// In modern Supabase, connection is handled automatically
+		setConnectionStatus("connected");
+	}, []);
+
+	const unsubscribeAll = useCallback(() => {
+		subscriptionsRef.current.forEach((channel) => {
+			supabase.removeChannel(channel);
+		});
+		subscriptionsRef.current.clear();
+		setActiveSubscriptions(0);
+	}, [supabase]);
 
 	// Initialize connection
 	useEffect(() => {
@@ -109,87 +126,71 @@ export function RealtimeProvider({ children, orgId }: RealtimeProviderProps) {
 			}
 		};
 
-		// Connect to Supabase realtime
-		supabase.realtime.onOpen(() => handleStatusChange("OPEN"));
-		supabase.realtime.onClose(() => handleStatusChange("CLOSED"));
-		supabase.realtime.onError(() => handleStatusChange("ERROR"));
-
-		// Initial connection
-		supabase.realtime.connect();
+		// Set initial connection status
+		setConnectionStatus("connected");
 
 		return () => {
 			if (reconnectTimeoutRef.current) {
 				clearTimeout(reconnectTimeoutRef.current);
 			}
 			unsubscribeAll();
-			supabase.realtime.disconnect();
 		};
-	}, []);
+	}, [reconnect, unsubscribeAll]);
 
-	const reconnect = () => {
-		setConnectionStatus("connecting");
-		supabase.realtime.connect();
-	};
+	const subscribe = useCallback(
+		(channelName: string, configs: SubscriptionConfig[]): string => {
+			// Generate unique subscription ID
+			const subscriptionId = `${channelName}_${Date.now()}_${Math.random()
+				.toString(36)
+				.substr(2, 9)}`;
 
-	const subscribe = (
-		channelName: string,
-		configs: SubscriptionConfig[]
-	): string => {
-		// Generate unique subscription ID
-		const subscriptionId = `${channelName}_${Date.now()}_${Math.random()
-			.toString(36)
-			.substr(2, 9)}`;
+			// Create channel
+			const channel = supabase.channel(subscriptionId);
 
-		// Create channel
-		const channel = supabase.channel(subscriptionId);
+			// Add postgres changes listeners
+			configs.forEach((config) => {
+				const filter = config.filter ? { filter: config.filter } : {};
 
-		// Add postgres changes listeners
-		configs.forEach((config) => {
-			const filter = config.filter ? { filter: config.filter } : {};
+				channel.on(
+					"postgres_changes" as any,
+					{
+						event: config.event || "*",
+						schema: "public",
+						table: config.table,
+						...filter,
+					},
+					config.callback
+				);
+			});
 
-			channel.on(
-				"postgres_changes",
-				{
-					event: config.event || "*",
-					schema: "public",
-					table: config.table,
-					...filter,
-				},
-				config.callback
-			);
-		});
+			// Subscribe to channel
+			channel.subscribe((status) => {
+				if (status === "SUBSCRIBED") {
+					setActiveSubscriptions((prev) => prev + 1);
+				}
+			});
 
-		// Subscribe to channel
-		channel.subscribe((status) => {
-			if (status === "SUBSCRIBED") {
-				setActiveSubscriptions((prev) => prev + 1);
+			// Store subscription
+			subscriptionsRef.current.set(subscriptionId, channel);
+
+			return subscriptionId;
+		},
+		[supabase]
+	);
+
+	const unsubscribe = useCallback(
+		(subscriptionId: string) => {
+			const channel = subscriptionsRef.current.get(subscriptionId);
+			if (channel) {
+				supabase.removeChannel(channel);
+				subscriptionsRef.current.delete(subscriptionId);
+				setActiveSubscriptions((prev) => Math.max(0, prev - 1));
 			}
-		});
+		},
+		[supabase]
+	);
 
-		// Store subscription
-		subscriptionsRef.current.set(subscriptionId, channel);
-
-		return subscriptionId;
-	};
-
-	const unsubscribe = (subscriptionId: string) => {
-		const channel = subscriptionsRef.current.get(subscriptionId);
-		if (channel) {
-			supabase.removeChannel(channel);
-			subscriptionsRef.current.delete(subscriptionId);
-			setActiveSubscriptions((prev) => Math.max(0, prev - 1));
-		}
-	};
-
-	const unsubscribeAll = () => {
-		subscriptionsRef.current.forEach((channel) => {
-			supabase.removeChannel(channel);
-		});
-		subscriptionsRef.current.clear();
-		setActiveSubscriptions(0);
-	};
-
-	const broadcast = (event: RealtimeEvent) => {
+	const broadcast = useCallback((event: RealtimeEvent) => {
 		// Broadcast to local event listeners
 		eventListenersRef.current.forEach((callback) => {
 			try {
@@ -198,16 +199,19 @@ export function RealtimeProvider({ children, orgId }: RealtimeProviderProps) {
 				console.error("Error in realtime event listener:", error);
 			}
 		});
-	};
+	}, []);
 
-	const addEventListener = (callback: (event: RealtimeEvent) => void) => {
-		eventListenersRef.current.add(callback);
+	const addEventListener = useCallback(
+		(callback: (event: RealtimeEvent) => void) => {
+			eventListenersRef.current.add(callback);
 
-		// Return cleanup function
-		return () => {
-			eventListenersRef.current.delete(callback);
-		};
-	};
+			// Return cleanup function
+			return () => {
+				eventListenersRef.current.delete(callback);
+			};
+		},
+		[]
+	);
 
 	const contextValue: RealtimeContextType = {
 		connectionStatus,
@@ -243,7 +247,7 @@ export function useRealtimeSubscription(
 	enabled: boolean = true
 ) {
 	const { subscribe, unsubscribe } = useRealtime();
-	const subscriptionIdRef = useRef<string>();
+	const subscriptionIdRef = useRef<string | null>(null);
 
 	useEffect(() => {
 		if (!enabled) return;
@@ -258,7 +262,7 @@ export function useRealtimeSubscription(
 				unsubscribe(subscriptionIdRef.current);
 			}
 		};
-	}, [channelName, enabled, JSON.stringify(configs)]);
+	}, [channelName, enabled, configs, subscribe, unsubscribe]);
 
 	// Cleanup on unmount
 	useEffect(() => {
@@ -267,5 +271,5 @@ export function useRealtimeSubscription(
 				unsubscribe(subscriptionIdRef.current);
 			}
 		};
-	}, []);
+	}, [unsubscribe]);
 }

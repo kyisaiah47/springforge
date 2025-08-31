@@ -80,19 +80,19 @@ export function RetroBoard({
 		});
 	}, [notes]);
 
-	const canEdit = (note: RetroNoteWithAuthor) => {
-		return (
+	const canEdit = (note: RetroNoteWithAuthor): boolean => {
+		return Boolean(
 			currentUserId &&
-			(note.author_member_id === currentUserId ||
-				retro.created_by === currentUserId)
+				(note.author_member_id === currentUserId ||
+					retro.created_by === currentUserId)
 		);
 	};
 
-	const canDelete = (note: RetroNoteWithAuthor) => {
-		return (
+	const canDelete = (note: RetroNoteWithAuthor): boolean => {
+		return Boolean(
 			currentUserId &&
-			(note.author_member_id === currentUserId ||
-				retro.created_by === currentUserId)
+				(note.author_member_id === currentUserId ||
+					retro.created_by === currentUserId)
 		);
 	};
 

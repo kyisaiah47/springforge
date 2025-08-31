@@ -279,10 +279,28 @@ export class PRRadarService {
 			}
 
 			const githubService = createGitHubService(integration);
-			githubData = await githubService.getPullRequest(
+			const prData = await githubService.getPullRequest(
 				request.repo,
 				request.number
 			);
+
+			// Transform GitHub PR data to match our expected interface
+			githubData = {
+				...prData,
+				body: prData.body || "",
+				author: {
+					login: prData.user.login,
+					id: prData.user.id,
+				},
+				files: prData.files?.map((file) => ({
+					filename: file.filename,
+					status: file.status,
+					additions: file.additions,
+					deletions: file.deletions,
+					changes: file.changes,
+					patch: file.patch,
+				})),
+			};
 		}
 
 		const scoreResult = this.scoringService.calculatePRScore(githubData);

@@ -245,7 +245,7 @@ export function validateQueryParams<T>(
 	const result = schema.safeParse(processedParams);
 
 	if (!result.success) {
-		const errors = result.error.issues.map((err: unknown) => ({
+		const errors = result.error.issues.map((err: any) => ({
 			field: err.path.join("."),
 			message: err.message,
 		}));

@@ -141,7 +141,7 @@ export class RetroService {
 			: undefined;
 
 		return {
-			retros: results.map((retro) => ({
+			retros: results.map((retro: any) => ({
 				...retro,
 				note_count: Array.isArray(retro.note_count)
 					? retro.note_count.length
@@ -381,8 +381,8 @@ export class RetroService {
 			totalVotes: 0,
 		};
 
-		notes.forEach((note) => {
-			stats.notesByColumn[note.column_key]++;
+		notes.forEach((note: any) => {
+			stats.notesByColumn[note.column_key as RetroColumn]++;
 			stats.totalVotes += note.votes;
 		});
 
