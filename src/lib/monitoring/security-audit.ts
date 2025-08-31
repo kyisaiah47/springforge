@@ -264,9 +264,9 @@ export function logSuspiciousActivity(
 
 export function logDataBreachAttempt(
 	sourceIP: string,
+	details: Record<string, any>,
 	userId?: string,
-	orgId?: string,
-	details: Record<string, any>
+	orgId?: string
 ) {
 	securityAuditor.logSecurityEvent({
 		type: "data_breach_attempt",

@@ -86,7 +86,7 @@ export function OrganizationSettings() {
 			toast({
 				title: "Error",
 				description: "Failed to load organization settings",
-				variant: "destructive",
+				variant: "error",
 			});
 		} finally {
 			setLoading(false);
@@ -132,7 +132,7 @@ export function OrganizationSettings() {
 			toast({
 				title: "Error",
 				description: "Failed to update organization settings",
-				variant: "destructive",
+				variant: "error",
 			});
 		} finally {
 			setSaving(false);

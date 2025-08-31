@@ -101,7 +101,6 @@ export function IntegrationSettings() {
 			toast({
 				title: "Error",
 				description: "Failed to load integrations",
-				variant: "destructive",
 			});
 		} finally {
 			setLoading(false);
@@ -165,7 +164,6 @@ export function IntegrationSettings() {
 					error instanceof Error
 						? error.message
 						: "Failed to create integration",
-				variant: "destructive",
 			});
 		} finally {
 			setCreating(false);
@@ -223,7 +221,6 @@ export function IntegrationSettings() {
 					error instanceof Error
 						? error.message
 						: "Failed to update integration",
-				variant: "destructive",
 			});
 		} finally {
 			setUpdating(false);
@@ -260,7 +257,6 @@ export function IntegrationSettings() {
 					error instanceof Error
 						? error.message
 						: "Failed to delete integration",
-				variant: "destructive",
 			});
 		}
 	};
@@ -298,14 +294,13 @@ export function IntegrationSettings() {
 			toast({
 				title: result.success ? "Test Successful" : "Test Failed",
 				description: result.message,
-				variant: result.success ? "default" : "destructive",
+				variant: result.success ? "default" : "error",
 			});
 		} catch (error) {
 			console.error("Error testing integration:", error);
 			toast({
 				title: "Error",
 				description: "Failed to test integration",
-				variant: "destructive",
 			});
 		} finally {
 			setTesting(null);

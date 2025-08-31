@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { linearAnimations } from "@/components/page-transition";
 
 interface PostNowButtonProps {
 	onGenerate: () => Promise<void>;
@@ -32,7 +33,7 @@ export function PostNowButton({
 		<Button
 			onClick={handleClick}
 			disabled={disabled || isGenerating}
-			className={className}
+			className={`${className} ${linearAnimations.buttonHover}`}
 			size="sm"
 		>
 			{isGenerating ? (

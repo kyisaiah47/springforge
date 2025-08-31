@@ -86,7 +86,7 @@ export function TeamManagement() {
 			toast({
 				title: "Error",
 				description: "Failed to load team members",
-				variant: "destructive",
+				variant: "error",
 			});
 		} finally {
 			setLoading(false);
@@ -129,7 +129,7 @@ export function TeamManagement() {
 				title: "Error",
 				description:
 					error instanceof Error ? error.message : "Failed to invite member",
-				variant: "destructive",
+				variant: "error",
 			});
 		} finally {
 			setInviting(false);
@@ -171,7 +171,7 @@ export function TeamManagement() {
 					error instanceof Error
 						? error.message
 						: "Failed to update member role",
-				variant: "destructive",
+				variant: "error",
 			});
 		}
 	};
@@ -201,7 +201,7 @@ export function TeamManagement() {
 				title: "Error",
 				description:
 					error instanceof Error ? error.message : "Failed to remove member",
-				variant: "destructive",
+				variant: "error",
 			});
 		}
 	};

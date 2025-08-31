@@ -147,7 +147,7 @@ export default function PRRadarPage() {
 						availableAuthors={prInsights
 							.filter((pr) => pr.author_member?.github_login)
 							.map((pr) => ({
-								id: pr.author_member_id || "",
+								member_id: pr.author_member_id || "",
 								github_login: pr.author_member?.github_login || "",
 							}))}
 					/>
@@ -155,9 +155,9 @@ export default function PRRadarPage() {
 					{staleAlerts.length > 0 && (
 						<div className="mt-6">
 							<StaleAlerts
-								alerts={staleAlerts}
-								onDismiss={handleDismissAlert}
-								onSnooze={handleSnoozeAlert}
+								staleAlerts={staleAlerts}
+								onDismissAlert={handleDismissAlert}
+								onSnoozeAlert={handleSnoozeAlert}
 							/>
 						</div>
 					)}
@@ -180,9 +180,8 @@ export default function PRRadarPage() {
 							{filteredPRs.map((pr) => (
 								<PRScoreCard
 									key={pr.id}
-									pr={pr}
-									isSelected={selectedPR === pr.id}
-									onClick={() =>
+									prInsight={pr}
+									onViewDetails={() =>
 										setSelectedPR(selectedPR === pr.id ? null : pr.id)
 									}
 								/>

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ModuleNav } from "@/components/module-nav";
 import { CommandPalette } from "@/components/command-palette";
+import { PageTransition } from "@/components/page-transition";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -58,7 +59,7 @@ export function AppShell({ children }: AppShellProps) {
 								role="img"
 								aria-label="Orbit logo"
 							>
-								<span className="text-sm font-bold">SF</span>
+								<span className="text-sm font-bold">🚀</span>
 							</div>
 							<div className="flex flex-col">
 								<span className="text-sm font-semibold">Orbit</span>
@@ -197,7 +198,9 @@ export function AppShell({ children }: AppShellProps) {
 						aria-label="Main content"
 						tabIndex={-1}
 					>
-						{children}
+						<PageTransition>
+							{children}
+						</PageTransition>
 					</main>
 				</div>
 			</div>

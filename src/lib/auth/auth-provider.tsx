@@ -26,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [loading, setLoading] = useState(true);
 	const supabase = createClient();
 
+
 	const handleUserSignIn = useCallback(async (user: User) => {
 		try {
 			// Call the onboarding API endpoint

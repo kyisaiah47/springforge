@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { linearAnimations, getStaggerDelay } from "@/components/page-transition";
 
 interface Retro {
 	id: string;
@@ -150,7 +151,6 @@ export default function RetroPage() {
 					action={{
 						label: "Create Retrospective",
 						onClick: () => setShowCreateDialog(true),
-						disabled: isCreating,
 					}}
 					secondaryAction={{
 						label: "View Demo Data",
@@ -160,11 +160,12 @@ export default function RetroPage() {
 				/>
 			) : (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-					{retros.map((retro) => (
+					{retros.map((retro, index) => (
 						<div
 							key={retro.id}
-							className="border rounded-lg p-4 hover:shadow-md cursor-pointer transition-shadow"
+							className={`border rounded-lg p-4 cursor-pointer ${linearAnimations.cardHover} ${linearAnimations.listItem}`}
 							onClick={() => router.push(`/retro/${retro.id}`)}
+							{...getStaggerDelay(index)}
 						>
 							<div className="flex items-center justify-between mb-2">
 								<h3 className="font-semibold">{retro.title}</h3>
