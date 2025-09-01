@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { linearAnimations, getStaggerDelay } from "@/components/page-transition";
 import Link from "next/link";
+import { OrbitalLogo } from "@/components/ui/orbital-logo";
 
 export default function Home() {
 	const { user, loading, signInWithGitHub } = useAuth();
@@ -75,19 +76,7 @@ export default function Home() {
 							variant="outline" 
 							className="h-10 w-10 rounded-lg p-0 border-border/50 flex items-center justify-center"
 						>
-							<svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<circle cx="32" cy="32" r="22" stroke="currentColor" strokeWidth="4" fill="none"/>
-								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.7" transform="rotate(60 32 32)"/>
-								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.5" transform="rotate(-60 32 32)"/>
-								<ellipse cx="32" cy="32" rx="16" ry="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(120 32 32)"/>
-								<circle cx="32" cy="32" r="5" fill="currentColor"/>
-								<circle cx="54" cy="32" r="4" fill="currentColor"/>
-								<circle cx="10" cy="32" r="3" fill="currentColor"/>
-								<circle cx="48" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
-								<circle cx="16" cy="48" r="2.5" fill="currentColor" opacity="0.8"/>
-								<circle cx="48" cy="48" r="2" fill="currentColor" opacity="0.6"/>
-								<circle cx="16" cy="16" r="2" fill="currentColor" opacity="0.6"/>
-							</svg>
+							<OrbitalLogo size={20} />
 						</Badge>
 						<span className="font-semibold text-lg">Orbit</span>
 					</div>
@@ -133,14 +122,7 @@ export default function Home() {
 								variant="outline" 
 								className="relative h-20 w-20 rounded-full p-0 border-border/30 hover:border-border/60 transition-all duration-300 flex items-center justify-center bg-background/80 backdrop-blur-sm"
 							>
-								<svg width="36" height="36" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-transform duration-300 group-hover:scale-110">
-									<circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
-									<ellipse cx="32" cy="32" rx="26" ry="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(45 32 32)"/>
-									<ellipse cx="32" cy="32" rx="26" ry="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.3" transform="rotate(-45 32 32)"/>
-									<circle cx="32" cy="32" r="3" fill="currentColor"/>
-									<circle cx="50" cy="32" r="2" fill="currentColor" opacity="0.8"/>
-									<circle cx="14" cy="32" r="2" fill="currentColor" opacity="0.6"/>
-								</svg>
+								<OrbitalLogo size={36} className="transition-transform duration-300 group-hover:scale-110" />
 							</Badge>
 						</div>
 					</div>
@@ -1090,8 +1072,8 @@ export default function Home() {
 				<div className="max-w-4xl mx-auto">
 					<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
 						<div className="flex items-center space-x-3">
-							<Badge variant="outline" className="h-8 w-8 rounded-lg p-0">
-								<div className="text-sm font-bold">O</div>
+							<Badge variant="outline" className="h-8 w-8 rounded-lg p-0 border-border/50 flex items-center justify-center">
+								<OrbitalLogo size={16} />
 							</Badge>
 							<span className="text-sm text-muted-foreground">© 2024 Orbit. All rights reserved.</span>
 						</div>

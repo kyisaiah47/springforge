@@ -111,88 +111,140 @@ export default function RetroPage() {
 
 	if (isLoading) {
 		return (
-			<div className="p-6">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight mb-2">Retro Arena</h1>
-					<p className="text-muted-foreground">
-						Loading retrospectives...
-					</p>
+			<div className="min-h-screen bg-background flex items-center justify-center">
+				<div className="relative">
+					<div className="animate-spin rounded-full h-12 w-12 border-2 border-border border-t-purple-500"></div>
+					<div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-purple-500/20 to-transparent animate-pulse"></div>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="p-6 space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight mb-2">Retro Arena</h1>
-					<p className="text-muted-foreground">
-						Collaborative team retrospectives with sticky notes and voting
-					</p>
-				</div>
-				<div className="flex gap-2">
-					<Button variant="outline" onClick={handleRefresh}>
-						<RefreshCw className="mr-2 h-4 w-4" />
-						Refresh
-					</Button>
-					<Button onClick={() => setShowCreateDialog(true)} disabled={isCreating}>
-						<Plus className="mr-2 h-4 w-4" />
-						Create Retro
-					</Button>
-				</div>
-			</div>
-
-			{retros.length === 0 ? (
-				<EmptyState
-					icon={<MessageSquare className="size-8 text-purple-600" />}
-					title="No Retrospectives Yet"
-					description="Create your first retrospective board to gather team feedback and improve your sprint process."
-					action={{
-						label: "Create Retrospective",
-						onClick: () => setShowCreateDialog(true),
-					}}
-					secondaryAction={{
-						label: "View Demo Data",
-						onClick: handleViewDemo,
-						variant: "outline",
-					}}
-				/>
-			) : (
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-					{retros.map((retro, index) => (
-						<div
-							key={retro.id}
-							className={`border rounded-lg p-4 cursor-pointer ${linearAnimations.cardHover} ${linearAnimations.listItem}`}
-							onClick={() => router.push(`/retro/${retro.id}`)}
-							{...getStaggerDelay(index)}
-						>
-							<div className="flex items-center justify-between mb-2">
-								<h3 className="font-semibold">{retro.title}</h3>
-								<span
-									className={`px-2 py-1 text-xs rounded-md ${
-										retro.status === "active"
-											? "bg-green-100 text-green-800"
-											: retro.status === "completed"
-											? "bg-blue-100 text-blue-800"
-											: "bg-gray-100 text-gray-800"
-									}`}
-								>
-									{retro.status}
-								</span>
+		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+			{/* Subtle background gradient */}
+			<div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20" />
+			
+			<div className="relative z-10 p-6 space-y-8">
+				{/* Header */}
+				<div className="flex items-center justify-between py-6">
+					<div className="space-y-3">
+						<div className="flex items-center space-x-3">
+							<div className="relative">
+								<div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+								<div className="absolute inset-0 w-3 h-3 bg-purple-500/30 rounded-full animate-ping"></div>
 							</div>
-							{retro.sprint && (
-								<p className="text-sm text-muted-foreground mb-2">
-									Sprint: {retro.sprint}
-								</p>
-							)}
-							<p className="text-xs text-muted-foreground">
-								Created {new Date(retro.created_at).toLocaleDateString()}
-							</p>
+							<h1 className="text-4xl md:text-5xl font-light tracking-tight">
+								Retro <span className="font-medium">Arena</span>
+							</h1>
 						</div>
-					))}
+						<p className="text-lg text-muted-foreground max-w-2xl">
+							Gamify your retrospectives with interactive boards, voting, and team insights. 
+							Transform feedback sessions into engaging collaborative experiences.
+						</p>
+					</div>
+					<div className="flex gap-3">
+						<Button variant="outline" onClick={handleRefresh} className="rounded-xl">
+							<RefreshCw className="mr-2 h-4 w-4" />
+							Refresh
+						</Button>
+						<Button onClick={() => setShowCreateDialog(true)} disabled={isCreating} className="rounded-xl">
+							<Plus className="mr-2 h-4 w-4" />
+							Create Retro
+						</Button>
+					</div>
 				</div>
-			)}
+
+				{/* Main Content */}
+				<div className="space-y-6">
+					{retros.length === 0 ? (
+						<div className="text-center py-16">
+							<div className="relative mx-auto w-16 h-16 mb-6">
+								<div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-purple-600/30 rounded-xl border border-border/50 flex items-center justify-center">
+									<MessageSquare className="h-8 w-8 text-purple-600" />
+								</div>
+							</div>
+							<h3 className="text-xl font-medium mb-2">No Retrospectives Yet</h3>
+							<p className="text-muted-foreground max-w-md mx-auto mb-6">
+								Create your first retrospective board to gather team feedback and improve your sprint process.
+							</p>
+							<div className="flex items-center justify-center gap-3">
+								<Button onClick={() => setShowCreateDialog(true)} className="rounded-xl">
+									<Plus className="mr-2 h-4 w-4" />
+									Create Retrospective
+								</Button>
+								<Button variant="outline" onClick={handleViewDemo} className="rounded-xl">
+									View Demo
+								</Button>
+							</div>
+						</div>
+					) : (
+						<>
+							<div className="flex items-center justify-between">
+								<h2 className="text-2xl font-medium tracking-tight">Your Retrospectives</h2>
+								<div className="text-sm text-muted-foreground">
+									{retros.length} retrospective{retros.length !== 1 ? 's' : ''}
+								</div>
+							</div>
+							
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+								{retros.map((retro, index) => (
+									<div
+										key={retro.id}
+										className="group cursor-pointer"
+										onClick={() => router.push(`/retro/${retro.id}`)}
+										{...getStaggerDelay(index)}
+									>
+										<div className="border border-border/50 bg-card/50 backdrop-blur-sm rounded-xl p-6 hover:bg-card/70 transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-lg group-hover:shadow-primary/5">
+											<div className="flex items-start justify-between mb-4">
+												<div className="relative">
+													<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/30 border border-border/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+														<MessageSquare className="h-6 w-6 text-purple-600" />
+													</div>
+													<div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-500/5 via-transparent to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
+												</div>
+												<div className={`text-xs px-2 py-1 rounded-full font-medium ${
+													retro.status === "active"
+														? "bg-green-500/20 text-green-600 border border-green-500/30"
+														: retro.status === "completed"
+														? "bg-blue-500/20 text-blue-600 border border-blue-500/30"
+														: "bg-muted/50 text-muted-foreground border border-border/30"
+												}`}>
+													{retro.status}
+												</div>
+											</div>
+											
+											<div className="space-y-3">
+												<h3 className="font-medium text-lg group-hover:text-foreground/90 transition-colors">
+													{retro.title}
+												</h3>
+												
+												{retro.sprint && (
+													<div className="text-sm text-muted-foreground">
+														<span className="text-xs bg-muted/50 px-2 py-1 rounded-full mr-2">Sprint</span>
+														{retro.sprint}
+													</div>
+												)}
+												
+												<div className="flex items-center justify-between pt-2 border-t border-border/30">
+													<div className="text-xs text-muted-foreground">
+														{new Date(retro.created_at).toLocaleDateString()}
+													</div>
+													<div className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+														Open →
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</>
+					)}
+				</div>
+				
+			{/* Close the main container */}
+			</div>
 
 			{/* Create Retro Dialog */}
 			<Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>

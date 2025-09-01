@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth/auth-provider";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import Link from "next/link";
+import { OrbitalLogo } from "@/components/ui/orbital-logo";
 
 function LoginContent() {
 	const { user, loading, signInWithGitHub } = useAuth();
@@ -49,19 +50,7 @@ function LoginContent() {
 							variant="outline" 
 							className="h-8 w-8 rounded-lg p-0 border-border/50 flex items-center justify-center"
 						>
-							<svg width="16" height="16" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<circle cx="32" cy="32" r="22" stroke="currentColor" strokeWidth="4" fill="none"/>
-								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.7" transform="rotate(60 32 32)"/>
-								<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.5" transform="rotate(-60 32 32)"/>
-								<ellipse cx="32" cy="32" rx="16" ry="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(120 32 32)"/>
-								<circle cx="32" cy="32" r="5" fill="currentColor"/>
-								<circle cx="54" cy="32" r="4" fill="currentColor"/>
-								<circle cx="10" cy="32" r="3" fill="currentColor"/>
-								<circle cx="48" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
-								<circle cx="16" cy="48" r="2.5" fill="currentColor" opacity="0.8"/>
-								<circle cx="48" cy="48" r="2" fill="currentColor" opacity="0.6"/>
-								<circle cx="16" cy="16" r="2" fill="currentColor" opacity="0.6"/>
-							</svg>
+							<OrbitalLogo size={16} />
 						</Badge>
 						<span className="font-semibold text-lg">Orbit</span>
 					</Link>
@@ -84,19 +73,7 @@ function LoginContent() {
 									variant="outline" 
 									className="h-16 w-16 rounded-2xl p-0 border-border/50 flex items-center justify-center bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-300 group"
 								>
-									<svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<circle cx="32" cy="32" r="22" stroke="currentColor" strokeWidth="4" fill="none"/>
-										<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.7" transform="rotate(60 32 32)"/>
-										<ellipse cx="32" cy="32" rx="28" ry="12" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.5" transform="rotate(-60 32 32)"/>
-										<ellipse cx="32" cy="32" rx="16" ry="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4" transform="rotate(120 32 32)"/>
-										<circle cx="32" cy="32" r="5" fill="currentColor"/>
-										<circle cx="54" cy="32" r="4" fill="currentColor"/>
-										<circle cx="10" cy="32" r="3" fill="currentColor"/>
-										<circle cx="48" cy="16" r="2.5" fill="currentColor" opacity="0.8"/>
-										<circle cx="16" cy="48" r="2.5" fill="currentColor" opacity="0.8"/>
-										<circle cx="48" cy="48" r="2" fill="currentColor" opacity="0.6"/>
-										<circle cx="16" cy="16" r="2" fill="currentColor" opacity="0.6"/>
-									</svg>
+									<OrbitalLogo size={32} />
 								</Badge>
 								<div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
 							</div>

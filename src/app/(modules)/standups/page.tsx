@@ -183,101 +183,174 @@ export default function StandupsPage() {
 
 	if (isLoadingUser) {
 		return (
-			<div className="p-6">
-				<div className="animate-pulse">
-					<div className="h-8 bg-muted rounded w-48 mb-2"></div>
-					<div className="h-4 bg-muted rounded w-96 mb-6"></div>
-					<div className="h-32 bg-muted rounded"></div>
+			<div className="min-h-screen bg-background flex items-center justify-center">
+				<div className="relative">
+					<div className="animate-spin rounded-full h-12 w-12 border-2 border-border border-t-blue-500"></div>
+					<div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-blue-500/20 to-transparent animate-pulse"></div>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="p-6 space-y-6">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight mb-2">AutoStand</h1>
-					<p className="text-muted-foreground">
-						Automated daily standups from GitHub activity
-					</p>
-				</div>
-				{currentUser && <PostNowButton onGenerate={handleGenerateStandup} />}
-			</div>
-
-			{/* Stats Cards */}
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Team Members</CardTitle>
-						<Users className="size-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{teamStats.totalMembers}</div>
-						<p className="text-xs text-muted-foreground">In your organization</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							Standups Today
-						</CardTitle>
-						<Activity className="size-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{teamStats.standupsToday}</div>
-						<p className="text-xs text-muted-foreground">
-							Generated today
-						</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">
-							GitHub Activity
-						</CardTitle>
-						<Plus className="size-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
-							{recentActivity?.commits?.length || 0}
+		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+			{/* Subtle background gradient */}
+			<div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20" />
+			
+			<div className="relative z-10 p-6 space-y-8">
+				{/* Header */}
+				<div className="flex items-center justify-between py-6">
+					<div className="space-y-3">
+						<div className="flex items-center space-x-3">
+							<div className="relative">
+								<div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+								<div className="absolute inset-0 w-3 h-3 bg-blue-500/30 rounded-full animate-ping"></div>
+							</div>
+							<h1 className="text-4xl md:text-5xl font-light tracking-tight">
+								Auto<span className="font-medium">Stand</span>
+							</h1>
 						</div>
-						<p className="text-xs text-muted-foreground">Recent commits</p>
-					</CardContent>
-				</Card>
-			</div>
-
-			{/* Main Content Grid */}
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-				{/* Recent Activity Timeline */}
-				<div className="lg:col-span-1">
-					{recentActivity ? (
-						<ActivityTimeline activity={recentActivity} />
-					) : (
-						<EmptyState
-							icon={<Activity className="size-6 text-muted-foreground" />}
-							title="No Recent Activity"
-							description="Generate a standup to see your GitHub activity and team insights."
-							action={{
-								label: "Generate Standup",
-								onClick: handleGenerateStandup,
-							}}
-							secondaryAction={{
-								label: "Load Demo Data",
-								onClick: () => (window.location.href = "/dashboard"),
-								variant: "outline",
-							}}
-						/>
+						<p className="text-lg text-muted-foreground max-w-2xl">
+							Transform your GitHub activity into meaningful standup updates. 
+							No more manual status reports—just intelligent automation.
+						</p>
+					</div>
+					{currentUser && (
+						<div className="flex items-center space-x-3">
+							<PostNowButton onGenerate={handleGenerateStandup} />
+						</div>
 					)}
 				</div>
 
-				{/* Standup History */}
-				<div className="lg:col-span-2">
-					<StandupHistory onFetchStandups={handleFetchStandups} />
+				{/* Stats Overview */}
+				<div className="space-y-6">
+					<div className="flex items-center justify-between">
+						<h2 className="text-2xl font-medium tracking-tight">Overview</h2>
+						<div className="text-sm text-muted-foreground">Live metrics</div>
+					</div>
+					
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+						<Card className="border-border/50 bg-card/50 backdrop-blur-sm group hover:bg-card/70 transition-all duration-300">
+							<CardContent className="p-6">
+								<div className="flex items-center justify-between mb-4">
+									<div className="relative">
+										<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/30 border border-border/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<Users className="h-6 w-6 text-blue-600" />
+										</div>
+										<div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/5 via-transparent to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
+									</div>
+									<div className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
+										Active
+									</div>
+								</div>
+								<div className="space-y-2">
+									<div className="text-3xl font-light">
+										{teamStats.totalMembers}
+									</div>
+									<div className="space-y-1">
+										<div className="text-sm font-medium text-foreground/90">Team Members</div>
+										<div className="text-xs text-muted-foreground">
+											In your organization
+										</div>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+
+						<Card className="border-border/50 bg-card/50 backdrop-blur-sm group hover:bg-card/70 transition-all duration-300">
+							<CardContent className="p-6">
+								<div className="flex items-center justify-between mb-4">
+									<div className="relative">
+										<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/30 border border-border/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<Activity className="h-6 w-6 text-green-600" />
+										</div>
+										<div className="absolute inset-0 rounded-xl bg-gradient-to-br from-green-500/5 via-transparent to-green-600/5 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
+									</div>
+									<div className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
+										Today
+									</div>
+								</div>
+								<div className="space-y-2">
+									<div className="text-3xl font-light">
+										{teamStats.standupsToday}
+									</div>
+									<div className="space-y-1">
+										<div className="text-sm font-medium text-foreground/90">Standups Today</div>
+										<div className="text-xs text-muted-foreground">
+											Generated automatically
+										</div>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+
+						<Card className="border-border/50 bg-card/50 backdrop-blur-sm group hover:bg-card/70 transition-all duration-300">
+							<CardContent className="p-6">
+								<div className="flex items-center justify-between mb-4">
+									<div className="relative">
+										<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/30 border border-border/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<Plus className="h-6 w-6 text-purple-600" />
+										</div>
+										<div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-500/5 via-transparent to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
+									</div>
+									<div className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
+										Recent
+									</div>
+								</div>
+								<div className="space-y-2">
+									<div className="text-3xl font-light">
+										{recentActivity?.commits?.length || 0}
+									</div>
+									<div className="space-y-1">
+										<div className="text-sm font-medium text-foreground/90">GitHub Activity</div>
+										<div className="text-xs text-muted-foreground">
+											Recent commits tracked
+										</div>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+					</div>
 				</div>
+
+				{/* Main Content */}
+				<div className="space-y-6">
+					<div className="flex items-center justify-between">
+						<h2 className="text-2xl font-medium tracking-tight">Activity & History</h2>
+						<div className="text-sm text-muted-foreground">Real-time updates</div>
+					</div>
+					
+					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+						{/* Recent Activity Timeline */}
+						<div className="lg:col-span-1">
+							{recentActivity ? (
+								<ActivityTimeline activity={recentActivity} />
+							) : (
+								<EmptyState
+									icon={<Activity className="size-6 text-muted-foreground" />}
+									title="No Recent Activity"
+									description="Generate a standup to see your GitHub activity and team insights."
+									action={{
+										label: "Generate Standup",
+										onClick: handleGenerateStandup,
+									}}
+									secondaryAction={{
+										label: "Load Demo Data",
+										onClick: () => (window.location.href = "/dashboard"),
+										variant: "outline",
+									}}
+								/>
+							)}
+						</div>
+
+						{/* Standup History */}
+						<div className="lg:col-span-2">
+							<StandupHistory onFetchStandups={handleFetchStandups} />
+						</div>
+					</div>
+				</div>
+				
+			{/* Close the main container */}
 			</div>
 		</div>
 	);

@@ -35,6 +35,11 @@ export const metadata: Metadata = {
   authors: [{ name: "Orbit Team" }],
   creator: "Orbit",
   publisher: "Orbit",
+  icons: {
+    icon: "/orbit-favicon.svg",
+    shortcut: "/orbit-favicon.svg",
+    apple: "/orbit-favicon.svg",
+  },
   formatDetection: {
     email: false,
     address: false,

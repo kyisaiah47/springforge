@@ -110,124 +110,204 @@ export default function DashboardPage() {
 	};
 
 	return (
-		<div className="p-6 space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight">
-						Welcome to Orbit
-					</h1>
-					<p className="text-muted-foreground">
-						Your all-in-one developer productivity suite
-					</p>
-				</div>
-				{hasCompletedOnboarding && (
-					<Button
-						variant="outline"
-						onClick={startGuidedTour}
-						className="flex items-center gap-2"
-					>
-						<HelpCircle className="h-4 w-4" />
-						Take Tour
-					</Button>
-				)}
-			</div>
-
-			<Card>
-				<CardHeader>
-					<CardTitle className="flex items-center gap-3">
-						<Avatar className="h-10 w-10">
-							<AvatarImage
-								src={user?.user_metadata?.avatar_url}
-								alt={user?.user_metadata?.full_name || "User"}
-							/>
-							<AvatarFallback>{userInitials}</AvatarFallback>
-						</Avatar>
-						<div>
-							<div className="font-semibold">
-								{user?.user_metadata?.full_name || user?.email}
-							</div>
-							<div className="text-sm text-muted-foreground">
-								GitHub: @{user?.user_metadata?.user_name}
-							</div>
-						</div>
-					</CardTitle>
-				</CardHeader>
-			</Card>
-
-			<div
-				className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-				data-tour="modules"
-			>
-				{modules.map((module) => (
-					<Link
-						key={module.title}
-						href={module.href}
-					>
-						<Card className="hover:shadow-md transition-shadow cursor-pointer">
-							<CardHeader className="pb-3">
-								<div
-									className={`w-12 h-12 rounded-lg ${module.bgColor} flex items-center justify-center mb-3`}
-								>
-									<module.icon className={`h-6 w-6 ${module.color}`} />
-								</div>
-								<CardTitle className="text-lg">{module.title}</CardTitle>
-								<CardDescription>{module.description}</CardDescription>
-							</CardHeader>
-						</Card>
-					</Link>
-				))}
-			</div>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>Getting Started</CardTitle>
-					<CardDescription>
-						Your database schema and authentication are configured. Ready to
-						explore the modules!
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
+		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+			{/* Subtle background gradient */}
+			<div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20" />
+			
+			<div className="relative z-10 p-6 space-y-8">
+				{/* Hero Section */}
+				<div className="flex items-center justify-between py-8">
 					<div className="space-y-3">
-						<div className="space-y-2 text-sm">
-							<p>
-								• Use{" "}
-								<kbd className="px-2 py-1 bg-muted rounded text-xs">Cmd+K</kbd>{" "}
-								to open the command palette
-							</p>
-							<p>
-								• Navigate quickly with keyboard shortcuts:{" "}
-								<kbd className="px-2 py-1 bg-muted rounded text-xs">g+s</kbd>{" "}
-								for AutoStand,{" "}
-								<kbd className="px-2 py-1 bg-muted rounded text-xs">g+p</kbd>{" "}
-								for PR Radar
-							</p>
-							<p>• Toggle between light and dark themes from the user menu</p>
+						<div className="flex items-center space-x-3">
+							<div className="relative">
+								<div className="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+								<div className="absolute inset-0 h-3 w-3 bg-green-500/30 rounded-full animate-ping"></div>
+							</div>
+							<h1 className="text-4xl md:text-5xl font-light tracking-tight">
+								Welcome to <span className="font-medium">Orbit</span>
+							</h1>
 						</div>
+						<p className="text-lg text-muted-foreground max-w-2xl">
+							Your development workflow is about to be transformed. 
+							Access all your productivity modules from one beautiful interface.
+						</p>
+					</div>
+					{hasCompletedOnboarding && (
+						<Button
+							variant="outline"
+							onClick={startGuidedTour}
+							className="flex items-center gap-2 rounded-xl"
+						>
+							<HelpCircle className="h-4 w-4" />
+							Take Tour
+						</Button>
+					)}
+				</div>
+
+				{/* User Profile Card */}
+				<Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+					<CardContent className="p-6">
+						<div className="flex items-center gap-4">
+							<div className="relative">
+								<Avatar className="h-12 w-12 ring-2 ring-border/50">
+									<AvatarImage
+										src={user?.user_metadata?.avatar_url}
+										alt={user?.user_metadata?.full_name || "User"}
+									/>
+									<AvatarFallback className="bg-primary/10 text-primary font-medium">
+										{userInitials}
+									</AvatarFallback>
+								</Avatar>
+								<div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 rounded-full border-2 border-background"></div>
+							</div>
+							<div className="flex-1">
+								<div className="font-medium text-lg">
+									{user?.user_metadata?.full_name || user?.email}
+								</div>
+								<div className="text-sm text-muted-foreground flex items-center gap-2">
+									<span>GitHub: @{user?.user_metadata?.user_name}</span>
+									<div className="w-1 h-1 bg-muted-foreground/50 rounded-full" />
+									<span>Ready to build</span>
+								</div>
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+
+				{/* Modules Grid */}
+				<div className="space-y-6">
+					<div className="flex items-center justify-between">
+						<h2 className="text-2xl font-medium tracking-tight">Your Modules</h2>
+						<div className="text-sm text-muted-foreground">4 productivity tools</div>
+					</div>
+					
+					<div
+						className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+						data-tour="modules"
+					>
+						{modules.map((module, index) => (
+							<Link
+								key={module.title}
+								href={module.href}
+								className="group"
+							>
+								<Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-300 cursor-pointer group-hover:scale-[1.02] group-hover:shadow-lg group-hover:shadow-primary/5">
+									<CardContent className="p-6 space-y-4">
+										<div className="flex items-center justify-between">
+											<div className="relative">
+												<div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${module.bgColor.includes('blue') ? 'from-blue-500/20 to-blue-600/30' : 
+													module.bgColor.includes('green') ? 'from-green-500/20 to-green-600/30' :
+													module.bgColor.includes('purple') ? 'from-purple-500/20 to-purple-600/30' :
+													'from-orange-500/20 to-orange-600/30'} border border-border/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+													<module.icon className={`h-6 w-6 ${module.color}`} />
+												</div>
+												<div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
+											</div>
+											<div className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
+												Module {index + 1}
+											</div>
+										</div>
+										
+										<div className="space-y-2">
+											<h3 className="text-lg font-medium group-hover:text-foreground/90 transition-colors">
+												{module.title}
+											</h3>
+											<p className="text-sm text-muted-foreground leading-relaxed">
+												{module.description}
+											</p>
+										</div>
+										
+										<div className="flex items-center justify-between pt-2">
+											<div className="flex items-center space-x-1">
+												<div className="w-1 h-1 bg-green-500 rounded-full"></div>
+												<span className="text-xs text-muted-foreground">Active</span>
+											</div>
+											<div className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+												Open →
+											</div>
+										</div>
+									</CardContent>
+								</Card>
+							</Link>
+						))}
+					</div>
+				</div>
+
+				{/* Quick Start Guide */}
+				<Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+					<CardContent className="p-6 space-y-6">
+						<div className="space-y-2">
+							<h3 className="text-xl font-medium">Quick Start Guide</h3>
+							<p className="text-muted-foreground">
+								Your workspace is ready. Here's how to get the most out of Orbit.
+							</p>
+						</div>
+						
+						<div className="grid md:grid-cols-3 gap-4">
+							<div className="space-y-2">
+								<div className="flex items-center space-x-2">
+									<div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center">
+										<span className="text-xs font-medium text-blue-600">⌘</span>
+									</div>
+									<span className="text-sm font-medium">Command Palette</span>
+								</div>
+								<p className="text-xs text-muted-foreground">
+									Press <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">⌘K</kbd> to quickly navigate
+								</p>
+							</div>
+							
+							<div className="space-y-2">
+								<div className="flex items-center space-x-2">
+									<div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center">
+										<span className="text-xs font-medium text-green-600">⚡</span>
+									</div>
+									<span className="text-sm font-medium">Shortcuts</span>
+								</div>
+								<p className="text-xs text-muted-foreground">
+									<kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">g+s</kbd> AutoStand, <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">g+p</kbd> PR Radar
+								</p>
+							</div>
+							
+							<div className="space-y-2">
+								<div className="flex items-center space-x-2">
+									<div className="w-6 h-6 bg-purple-500/20 rounded-full flex items-center justify-center">
+										<span className="text-xs font-medium text-purple-600">🎨</span>
+									</div>
+									<span className="text-sm font-medium">Themes</span>
+								</div>
+								<p className="text-xs text-muted-foreground">
+									Switch themes from user menu
+								</p>
+							</div>
+						</div>
+
 						{hasCompletedOnboarding && (
-							<div className="pt-2 border-t flex gap-2">
+							<div className="pt-4 border-t border-border/50 flex gap-3">
 								<Button
 									variant="outline"
 									size="sm"
 									onClick={startGuidedTour}
-									className="flex items-center gap-2"
+									className="flex items-center gap-2 rounded-lg"
 								>
 									<Play className="h-4 w-4" />
-									Take the Tour Again
+									Take Tour
 								</Button>
 								<Button
 									variant="outline"
 									size="sm"
 									onClick={handleSeedDemoData}
-									className="flex items-center gap-2"
+									className="flex items-center gap-2 rounded-lg"
 								>
 									<Database className="h-4 w-4" />
-									Seed Demo Data
+									Demo Data
 								</Button>
 							</div>
 						)}
-					</div>
-				</CardContent>
-			</Card>
+					</CardContent>
+				</Card>
+
+				{/* Close the main container */}
+			</div>
 
 			{/* Onboarding Flow */}
 			<OnboardingFlow

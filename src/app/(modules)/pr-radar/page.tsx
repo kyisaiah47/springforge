@@ -91,114 +91,134 @@ export default function PRRadarPage() {
 
 	if (isInitialLoading) {
 		return (
-			<div className="p-6">
-				<div className="flex items-center justify-between mb-6">
-					<div className="flex items-center gap-2">
-						<Radar className="h-8 w-8" />
-						<div>
-							<h1 className="text-3xl font-bold tracking-tight">PR Radar</h1>
-							<p className="text-muted-foreground">
-								Loading pull request insights...
-							</p>
-						</div>
-					</div>
+			<div className="min-h-screen bg-background flex items-center justify-center">
+				<div className="relative">
+					<div className="animate-spin rounded-full h-12 w-12 border-2 border-border border-t-green-500"></div>
+					<div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-green-500/20 to-transparent animate-pulse"></div>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="p-6">
-			<div className="flex items-center justify-between mb-6">
-				<div className="flex items-center gap-2">
-					<Radar className="h-8 w-8" />
-					<div>
-						<h1 className="text-3xl font-bold tracking-tight">PR Radar</h1>
-						<p className="text-muted-foreground">
-							Monitor pull request health and get intelligent insights
+		<div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+			{/* Subtle background gradient */}
+			<div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20" />
+			
+			<div className="relative z-10 p-6 space-y-8">
+				{/* Header */}
+				<div className="flex items-center justify-between py-6">
+					<div className="space-y-3">
+						<div className="flex items-center space-x-3">
+							<div className="relative">
+								<div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+								<div className="absolute inset-0 w-3 h-3 bg-green-500/30 rounded-full animate-ping"></div>
+							</div>
+							<h1 className="text-4xl md:text-5xl font-light tracking-tight">
+								PR <span className="font-medium">Radar</span>
+							</h1>
+						</div>
+						<p className="text-lg text-muted-foreground max-w-2xl">
+							Monitor pull request health with AI-powered insights. 
+							Get intelligent reviews, risk analysis, and team optimization.
 						</p>
 					</div>
-				</div>
-				<div className="flex gap-2">
-					<Button
-						variant="outline"
-						onClick={handleRefreshData}
-						disabled={isLoading}
-					>
-						<RefreshCw
-							className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-						/>
-						Refresh
-					</Button>
-					<Button>
-						<Plus className="mr-2 h-4 w-4" />
-						Add Repository
-					</Button>
-				</div>
-			</div>
-
-			<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-				{/* Filters */}
-				<div className="lg:col-span-1">
-					<PRFilters
-						filters={filters}
-						onFiltersChange={setFilters}
-						availableRepos={[...new Set(prInsights.map((pr) => pr.repo))]}
-						availableAuthors={prInsights
-							.filter((pr) => pr.author_member?.github_login)
-							.map((pr) => ({
-								member_id: pr.author_member_id || "",
-								github_login: pr.author_member?.github_login || "",
-							}))}
-					/>
-					
-					{staleAlerts.length > 0 && (
-						<div className="mt-6">
-							<StaleAlerts
-								staleAlerts={staleAlerts}
-								onDismissAlert={handleDismissAlert}
-								onSnoozeAlert={handleSnoozeAlert}
+					<div className="flex gap-3">
+						<Button
+							variant="outline"
+							onClick={handleRefreshData}
+							disabled={isLoading}
+							className="rounded-xl"
+						>
+							<RefreshCw
+								className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
 							/>
-						</div>
-					)}
+							Refresh
+						</Button>
+						<Button className="rounded-xl">
+							<Plus className="mr-2 h-4 w-4" />
+							Add Repository
+						</Button>
+					</div>
 				</div>
 
 				{/* Main Content */}
-				<div className="lg:col-span-3">
-					{filteredPRs.length === 0 ? (
-						<div className="text-center py-12">
-							<Radar className="mx-auto h-12 w-12 text-muted-foreground" />
-							<h3 className="mt-2 text-sm font-semibold">No pull requests</h3>
-							<p className="mt-1 text-sm text-muted-foreground">
-								{prInsights.length === 0
-									? "No PR data available. Make sure your GitHub integration is configured and you have PRs in your repositories."
-									: "No PRs match the current filters."}
-							</p>
+				<div className="space-y-6">
+					<div className="flex items-center justify-between">
+						<h2 className="text-2xl font-medium tracking-tight">Pull Requests</h2>
+						<div className="text-sm text-muted-foreground">
+							{filteredPRs.length} of {prInsights.length} PRs
 						</div>
-					) : (
-						<div className="space-y-4">
-							{filteredPRs.map((pr) => (
-								<PRScoreCard
-									key={pr.id}
-									prInsight={pr}
-									onViewDetails={() =>
-										setSelectedPR(selectedPR === pr.id ? null : pr.id)
-									}
-								/>
-							))}
-						</div>
-					)}
-
-					{/* Reviewer Suggestions */}
-					{reviewerSuggestions.length > 0 && (
-						<div className="mt-6">
-							<ReviewerSuggestions
-								suggestions={reviewerSuggestions}
-								onRequestReview={handleRequestReview}
+					</div>
+					
+					<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+						{/* Filters Sidebar */}
+						<div className="lg:col-span-1 space-y-6">
+							<PRFilters
+								filters={filters}
+								onFiltersChange={setFilters}
+								availableRepos={[...new Set(prInsights.map((pr) => pr.repo))]}
+								availableAuthors={prInsights
+									.filter((pr) => pr.author_member?.github_login)
+									.map((pr) => ({
+										member_id: pr.author_member_id || "",
+										github_login: pr.author_member?.github_login || "",
+									}))}
 							/>
+							
+							{staleAlerts.length > 0 && (
+								<StaleAlerts
+									staleAlerts={staleAlerts}
+									onDismissAlert={handleDismissAlert}
+									onSnoozeAlert={handleSnoozeAlert}
+								/>
+							)}
 						</div>
-					)}
+
+						{/* PR List */}
+						<div className="lg:col-span-3">
+							{filteredPRs.length === 0 ? (
+								<div className="text-center py-16">
+									<div className="relative mx-auto w-16 h-16 mb-6">
+										<div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-green-600/30 rounded-xl border border-border/50 flex items-center justify-center">
+											<Radar className="h-8 w-8 text-green-600" />
+										</div>
+									</div>
+									<h3 className="text-xl font-medium mb-2">No pull requests found</h3>
+									<p className="text-muted-foreground max-w-md mx-auto">
+										{prInsights.length === 0
+											? "No PR data available. Make sure your GitHub integration is configured and you have PRs in your repositories."
+											: "No PRs match the current filters. Try adjusting your search criteria."}
+									</p>
+								</div>
+							) : (
+								<div className="space-y-4">
+									{filteredPRs.map((pr) => (
+										<PRScoreCard
+											key={pr.id}
+											prInsight={pr}
+											onViewDetails={() =>
+												setSelectedPR(selectedPR === pr.id ? null : pr.id)
+											}
+										/>
+									))}
+								</div>
+							)}
+
+							{/* Reviewer Suggestions */}
+							{reviewerSuggestions.length > 0 && (
+								<div className="mt-8">
+									<ReviewerSuggestions
+										suggestions={reviewerSuggestions}
+										onRequestReview={handleRequestReview}
+									/>
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
+				
+			{/* Close the main container */}
 			</div>
 		</div>
 	);

@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, Settings, User, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { OrbitalLogo } from "@/components/ui/orbital-logo";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -51,57 +52,68 @@ export function AppShell({ children }: AppShellProps) {
 					data-tour="sidebar"
 					role="navigation"
 					aria-label="Main navigation"
+					className="bg-card/50 backdrop-blur-sm border-border/50 flex flex-col"
 				>
-					<SidebarHeader className="border-b border-sidebar-border">
-						<div className="flex items-center gap-2 px-4 py-2">
-							<div
-								className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
-								role="img"
-								aria-label="Orbit logo"
-							>
-								<span className="text-sm font-bold">🚀</span>
+					<SidebarHeader className="border-b border-border/30 bg-card/30">
+						<Link href="/dashboard" className="block">
+							<div className="flex items-center gap-3 px-4 py-3 group hover:bg-accent/50 rounded-lg mx-2 my-1 transition-colors">
+								<div className="relative">
+									<div
+										className="h-10 w-10 rounded-xl border border-border/50 flex items-center justify-center bg-gradient-to-br from-background/50 to-muted/30 backdrop-blur-sm group-hover:scale-105 transition-transform"
+										role="img"
+										aria-label="Orbit logo"
+									>
+										<OrbitalLogo size={20} />
+									</div>
+									<div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity blur-lg"></div>
+								</div>
+								<div className="flex flex-col">
+									<span className="text-lg font-medium">Orbit</span>
+									<span className="text-xs text-muted-foreground">
+										Developer Productivity Suite
+									</span>
+								</div>
 							</div>
-							<div className="flex flex-col">
-								<span className="text-sm font-semibold">Orbit</span>
-								<span className="text-xs text-muted-foreground">
-									Developer Suite
-								</span>
-							</div>
-						</div>
+						</Link>
 					</SidebarHeader>
 
-					<ModuleNav />
+					<div className="flex-1 overflow-auto min-h-0">
+						<ModuleNav />
+					</div>
 
-					<SidebarFooter className="border-t border-sidebar-border">
-						<div className="flex items-center gap-2 px-4 py-2">
+					<SidebarFooter className="border-t border-border/30 bg-card/30">
+						<div className="px-2 py-1">
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
 									<Button
 										variant="ghost"
-										className="h-8 w-full justify-start gap-2 px-2"
+										className="w-full justify-start gap-3 px-3 py-2 h-auto hover:bg-accent/50 rounded-lg"
 										data-tour="user-menu"
 										aria-label={`User menu for ${
 											user?.user_metadata?.full_name || "User"
 										}`}
 									>
-										<Avatar className="h-6 w-6">
+										<Avatar className="h-8 w-8 ring-2 ring-border/30">
 											<AvatarImage
 												src={user?.user_metadata?.avatar_url}
 												alt={`${
 													user?.user_metadata?.full_name || "User"
 												} avatar`}
 											/>
-											<AvatarFallback className="text-xs">
+											<AvatarFallback className="text-xs bg-primary/10 text-primary font-medium">
 												{userInitials}
 											</AvatarFallback>
 										</Avatar>
-										<div className="flex flex-col items-start text-left">
+										<div className="flex flex-col items-start text-left flex-1">
 											<span className="text-sm font-medium">
 												{user?.user_metadata?.full_name || "User"}
 											</span>
-											<span className="text-xs text-muted-foreground">
-												{user?.email}
-											</span>
+											<div className="flex items-center gap-2">
+												<span className="text-xs text-muted-foreground">
+													{user?.email}
+												</span>
+												<div className="w-1 h-1 bg-green-500 rounded-full"></div>
+											</div>
 										</div>
 									</Button>
 								</DropdownMenuTrigger>
@@ -113,7 +125,7 @@ export function AppShell({ children }: AppShellProps) {
 									<DropdownMenuLabel>My Account</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									<DropdownMenuItem asChild>
-										<Link href="/settings">
+										<Link href="/profile">
 											<User
 												className="mr-2 h-4 w-4"
 												aria-hidden="true"
@@ -171,17 +183,20 @@ export function AppShell({ children }: AppShellProps) {
 
 				<div className="flex flex-1 flex-col">
 					<header
-						className="flex h-14 items-center gap-4 border-b bg-background px-6"
+						className="flex h-16 items-center gap-4 border-b border-border/40 bg-background/80 backdrop-blur-sm px-6"
 						role="banner"
 						aria-label="Application header"
 					>
-						<SidebarTrigger aria-label="Toggle navigation sidebar" />
+						<SidebarTrigger 
+							aria-label="Toggle navigation sidebar" 
+							className="hover:bg-accent/50 rounded-lg"
+						/>
 						<div className="flex flex-1 items-center justify-between">
 							<div className="flex items-center gap-2">
-								<span className="text-sm text-muted-foreground">
+								<span className="text-sm text-muted-foreground/80">
 									Press{" "}
 									<kbd
-										className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"
+										className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded-md border border-border/50 bg-muted/50 backdrop-blur-sm px-2 font-mono text-[10px] font-medium text-muted-foreground opacity-100"
 										aria-label="Command K keyboard shortcut"
 									>
 										<span className="text-xs">⌘</span>K

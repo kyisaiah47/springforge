@@ -26,31 +26,31 @@ const modules = [
 		title: "Dashboard",
 		url: "/dashboard",
 		icon: Home,
-		shortcut: "g d",
+		shortcut: "G D",
 	},
 	{
 		title: "AutoStand",
 		url: "/standups",
 		icon: Users,
-		shortcut: "g s",
+		shortcut: "G S",
 	},
 	{
 		title: "PR Radar",
 		url: "/pr-radar",
 		icon: GitPullRequest,
-		shortcut: "g p",
+		shortcut: "G P",
 	},
 	{
 		title: "Retro Arena",
 		url: "/retro",
 		icon: MessageSquare,
-		shortcut: "g r",
+		shortcut: "G R",
 	},
 	{
 		title: "Debug Arcade",
 		url: "/arcade",
 		icon: Gamepad2,
-		shortcut: "g a",
+		shortcut: "G A",
 	},
 ];
 
@@ -113,40 +113,67 @@ export function ModuleNav() {
 	}, [router]);
 
 	return (
-		<SidebarContent>
+		<SidebarContent className="px-2 py-2">
 			<SidebarGroup>
-				<SidebarGroupLabel>Modules</SidebarGroupLabel>
+				<SidebarGroupLabel className="text-xs font-medium text-muted-foreground px-2 py-2">
+					Modules
+				</SidebarGroupLabel>
 				<SidebarGroupContent>
 					<SidebarMenu
 						role="list"
 						aria-label="Module navigation"
+						className="space-y-0.5"
 					>
-						{modules.map((module) => (
-							<SidebarMenuItem
-								key={module.title}
-								role="listitem"
-							>
-								<SidebarMenuButton
-									asChild
-									isActive={pathname.startsWith(module.url)}
-									tooltip={`${module.title} (${module.shortcut})`}
-								>
-									<Link
-										href={module.url}
-										aria-label={`Navigate to ${module.title} (keyboard shortcut: ${module.shortcut})`}
-										aria-current={
-											pathname.startsWith(module.url) ? "page" : undefined
-										}
+						{modules.map((module) => {
+							const isActive = pathname.startsWith(module.url);
+							const moduleColor = 
+								module.title === "Dashboard" ? "blue" :
+								module.title === "AutoStand" ? "blue" :
+								module.title === "PR Radar" ? "green" :
+								module.title === "Retro Arena" ? "purple" :
+								"orange";
+							
+							return (
+								<SidebarMenuItem key={module.title}>
+									<SidebarMenuButton
+										asChild
+										isActive={isActive}
+										tooltip={module.title}
+										className="group h-auto p-0 rounded-xl hover:bg-accent/50"
 									>
-										<module.icon
-											className="h-4 w-4"
-											aria-hidden="true"
-										/>
-										<span>{module.title}</span>
-									</Link>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-						))}
+										<Link
+											href={module.url}
+											className="flex items-center gap-3 p-3 w-full"
+											aria-label={`Navigate to ${module.title}`}
+										>
+											<div className="relative shrink-0">
+												<div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${
+													moduleColor === "blue" ? "from-blue-500/20 to-blue-600/30" :
+													moduleColor === "green" ? "from-green-500/20 to-green-600/30" :
+													moduleColor === "purple" ? "from-purple-500/20 to-purple-600/30" :
+													"from-orange-500/20 to-orange-600/30"
+												} border border-border/50 flex items-center justify-center group-hover:scale-105 transition-transform`}>
+													<module.icon
+														className={`h-4 w-4 ${
+															moduleColor === "blue" ? "text-blue-600" :
+															moduleColor === "green" ? "text-green-600" :
+															moduleColor === "purple" ? "text-purple-600" :
+															"text-orange-600"
+														}`}
+													/>
+												</div>
+											</div>
+											<div className="flex flex-col flex-1 min-w-0">
+												<span className="text-sm font-medium truncate">{module.title}</span>
+											</div>
+											{isActive && (
+												<div className="w-2 h-2 bg-primary rounded-full shrink-0"></div>
+											)}
+										</Link>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							);
+						})}
 					</SidebarMenu>
 				</SidebarGroupContent>
 			</SidebarGroup>
